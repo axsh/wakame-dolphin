@@ -32,6 +32,7 @@ module Dolphin
         column_name = SimpleUUID::UUID.new(Time.now).to_guid
         value = MultiJson.dump(event[:messages])
         db.insert(COLUMN_FAMILY, ROW_KEY, {column_name => value})
+        column_name
       end
     end
   end

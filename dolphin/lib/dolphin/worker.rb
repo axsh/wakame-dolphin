@@ -24,8 +24,7 @@ module Dolphin
 
       # synchronized
       notifications = future_notification.value
-      future_event.value
-
+      event_id = future_event.value
       if notifications.nil?
         log_message = "Not found notification: #{event_object[:notification_id]}"
         logger :error, log_message
@@ -60,6 +59,7 @@ module Dolphin
         end
 
         message = build_message(sender_type, message_template_id, build_params)
+        message.event_id = event_id
 
         if message.nil?
           log_message = "Failed to build message: #{message}"

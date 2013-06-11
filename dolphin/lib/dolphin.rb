@@ -118,4 +118,5 @@ module Dolphin
   autoload :Worker, 'dolphin/worker'
   autoload :QueryProcessor, 'dolphin/query_processor'
   autoload :Sender, 'dolphin/sender'
+  autoload :Mailer, 'dolphin/mailer'
 end
