@@ -2,6 +2,7 @@
 
 require 'rubygems'
 require 'rspec'
+require File.join(File.expand_path('../../', __FILE__), 'lib/dolphin')
 
 
 # TODO: Factory Girl
