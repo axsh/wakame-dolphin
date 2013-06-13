@@ -20,14 +20,14 @@ module Dolphin
     include Dolphin::Util
 
     def db
-      con = Dolphin::DataBase.create(Dolphin.settings['database']['adapter'].to_sym, {
+      @connection ||= Dolphin::DataBase.create(Dolphin.settings['database']['adapter'].to_sym, {
         :class => self
       }).connect
 
-      if con.nil?
+      if @connection.nil?
         raise 'Connection to database failed'
       else
-        con
+        @connection
       end
     end
 
