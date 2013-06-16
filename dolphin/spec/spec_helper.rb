@@ -12,5 +12,5 @@ Bundler.require :default if defined?(Bundler)
 Dir.glob('./spec/helpers/*_helper.rb').each {|f| require File.expand_path(f) }
 
 RSpec.configure do |c|
-  c.filter_run_excluding :smtp => true
+  c.include WebRequestHelper
 end
