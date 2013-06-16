@@ -95,6 +95,7 @@ module Dolphin
 
   autoload :Util, 'dolphin/util'
   autoload :MessageBuilder, 'dolphin/message_builder'
+  autoload :TemplateBuilder, 'dolphin/message_builder'
   autoload :DataBase, 'dolphin/database'
 
   module Models
