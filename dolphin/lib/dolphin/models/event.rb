@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 require 'multi_json'
+require 'simple_uuid'
 
 module Dolphin
   module Models
