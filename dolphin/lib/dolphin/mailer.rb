@@ -32,6 +32,34 @@ module Dolphin
 
     default :charset => 'ISO-2022-JP'
 
+
+    #
+    # ==== Examples
+    #
+    #   read_iso2022_jp_mail('/var/tmp/test@example.com')
+    #
+    def self.read_iso2022_jp_mail(path, encoding_type='UTF-8')
+      data = File.open(path, 'rb').read
+      ec = Encoding::Converter.new("ISO-2022-JP", encoding_type)
+      converted_data = ec.convert(data)
+      data = converted_data.split("\r\n\r\n")
+      header = data[0].split("\r\n")
+      body = data[1]
+
+      h = Hash.new
+      h[:date] = header[0]
+      h[:from] = header[1]
+      h[:to] = header[2]
+      h[:message_id]  = header[3]
+      h[:subject] = header[4]
+      h[:mime_version] = header[5]
+      h[:event_id] = header[9]
+      h.map{|k,v| h[k] = v.split(':')[1].strip}
+
+      h[:body] = body
+      h
+    end
+
     def notify(send_params)
       if send_params[:from].blank?
         raise 'Not found from field.'
