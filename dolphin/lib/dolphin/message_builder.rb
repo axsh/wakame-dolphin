@@ -10,9 +10,11 @@ module Dolphin
 
     def build(template_str, params)
       template = Erubis::Eruby.new(template_str)
-      params.each {|key, val|
-        instance_variable_set("@#{key}", val)
-      }
+      if params.is_a? Hash
+        params.each {|key, val|
+          instance_variable_set("@#{key}", val)
+        }
+      end
       template.result(binding)
     end
   end
