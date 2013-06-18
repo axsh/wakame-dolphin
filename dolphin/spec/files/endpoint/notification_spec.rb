@@ -21,8 +21,8 @@ describe 'Notification API' do
           "bcc" =>"foofoo@example.com,barbar@example.com"
         }
       }
-      @row_key = 'system'
-      @connection.insert('notifications', @row_key, {
+      @notification_id = 'system'
+      @connection.insert('notifications', @notification_id, {
         'methods' => MultiJson.dump(@notification_values)
       })
     end
@@ -31,7 +31,7 @@ describe 'Notification API' do
   it 'expect to get notifications' do
     res = get('/notifications', :headers => {
       'Content-Type' =>'application/json',
-      'X-Notification-Id' => @row_key,
+      'X-Notification-Id' => @notification_id,
     })
 
     expect(res['results']).to eql @notification_values
@@ -42,7 +42,7 @@ describe 'Notification API' do
     res = post('/notifications',
       :headers => {
         'Content-Type' =>'application/json',
-        'X-Notification-Id' => @row_key
+        'X-Notification-Id' => @notification_id
       },
       :body => @notification_values.to_json
     )
@@ -52,7 +52,7 @@ describe 'Notification API' do
   it 'expect to delete notification' do
     res = delete('/notifications', :headers => {
       'Content-Type' =>'application/json',
-      'X-Notification-Id' => @row_key,
+      'X-Notification-Id' => @notification_id,
     })
     expect(res['message']).to eql 'OK'
   end
