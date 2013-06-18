@@ -37,7 +37,7 @@ module Dolphin
       def build_message(str, params)
         begin
           template = TemplateBuilder.new
-          template.build(str, params)
+          template.build(str, params).encode("UTF-8")
         rescue SyntaxError => e
           logger :error, e
         end
