@@ -14,4 +14,5 @@ Dir.glob('./spec/helpers/*_helper.rb').each {|f| require File.expand_path(f) }
 
 RSpec.configure do |c|
   c.include WebRequestHelper
+  c.include TestHelper
 end
