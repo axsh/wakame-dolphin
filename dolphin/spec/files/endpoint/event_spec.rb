@@ -43,8 +43,8 @@ describe 'Event API' do
 
       @column_name = SimpleUUID::UUID.new(Time.now).to_guid
       @connection.insert(
-        Dolphin::Models::Event::COLUMN_FAMILY,
-        Dolphin::Models::Event::ROW_KEY,
+        Dolphin::Models::Cassandra::Event::COLUMN_FAMILY,
+        Dolphin::Models::Cassandra::Event::ROW_KEY,
         {@column_name => MultiJson.dump(@event_values)}
       )
 

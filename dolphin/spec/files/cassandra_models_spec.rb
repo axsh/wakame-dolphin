@@ -12,7 +12,7 @@ describe 'Test Dolphin::Models for Cassandra' do
     pending "Cassandra doens't exist" if @connection.nil?
   end
 
-  describe Dolphin::Models::Event do
+  describe Dolphin::Models::Cassandra::Event do
 
     before(:all) do
       @event_values = []
@@ -26,14 +26,14 @@ describe 'Test Dolphin::Models for Cassandra' do
 
       @column_name = SimpleUUID::UUID.new(Time.now).to_guid
       @connection.insert(
-        Dolphin::Models::Event::COLUMN_FAMILY,
-        Dolphin::Models::Event::ROW_KEY,
+        Dolphin::Models::Cassandra::Event::COLUMN_FAMILY,
+        Dolphin::Models::Cassandra::Event::ROW_KEY,
         {@column_name => MultiJson.dump(@event_values)}
       )
     end
 
     subject(:event) {
-      event = Dolphin::Models::Event.new
+      event = Dolphin::Models::Cassandra::Event.new
       event.instance_variable_set(:@connection, @connection)
       event
     }
@@ -70,7 +70,7 @@ describe 'Test Dolphin::Models for Cassandra' do
     end
   end
 
-  context Dolphin::Models::Notification do
+  context Dolphin::Models::Cassandra::Notification do
 
     before(:all) do
       if @connection
@@ -90,7 +90,7 @@ describe 'Test Dolphin::Models for Cassandra' do
     end
 
     subject(:notification) {
-      notification = Dolphin::Models::Notification.new
+      notification = Dolphin::Models::Cassandra::Notification.new
       notification.instance_variable_set(:@connection, @connection)
       notification
     }

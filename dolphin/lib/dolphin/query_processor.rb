@@ -37,7 +37,8 @@ module Dolphin
     private
     def send(model_name, method, *args)
       begin
-        klass = Dolphin::Models.const_get(model_name.capitalize)
+        # TODO: Fix Cassandra
+        klass = Dolphin::Models::Cassandra.const_get(model_name.capitalize)
         k = klass.new
         results = k.__send__(method, *args)
       rescue => e

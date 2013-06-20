@@ -6,7 +6,7 @@ describe 'Notification API' do
   before(:all) do
 
     # TODO: Change keyspace for test
-    @connection = Dolphin::DataBase::Cassandra.new(
+    @connection = Dolphin::DataStore::Cassandra.new(
       :keyspace => 'dolphin',
       :hosts => Dolphin.settings['database']['hosts'],
       :port => Dolphin.settings['database']['port']
