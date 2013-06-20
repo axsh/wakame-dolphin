@@ -12,7 +12,7 @@ describe 'Event API' do
     @mail_to = "test_to@example.com"
     @temporary_mail = "#{output_mail_file_location}#{@mail_to}"
     # TODO: Change keyspace for test
-    @connection = Dolphin::DataBase::Cassandra.new(
+    @connection = Dolphin::DataStore::Cassandra.new(
       :keyspace => 'dolphin',
       :hosts => Dolphin.settings['database']['hosts'],
       :port => Dolphin.settings['database']['port']

@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe 'Test Dolphin::Models for Cassandra' do
   before(:all) do
-    @connection = Dolphin::DataBase::Cassandra.new(
+    @connection = Dolphin::DataStore::Cassandra.new(
       :keyspace => 'dolphin_test',
       :hosts => Dolphin.settings['database']['hosts'],
       :port => Dolphin.settings['database']['port']
