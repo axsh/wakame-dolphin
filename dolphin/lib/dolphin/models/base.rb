@@ -3,7 +3,6 @@
 module Dolphin
   module Models
     class Base
-      include Dolphin::DataStore
     end
   end
 end

@@ -11,15 +11,13 @@ describe 'Event API' do
 
     @mail_to = "test_to@example.com"
     @temporary_mail = "#{output_mail_file_location}#{@mail_to}"
-    # TODO: Change keyspace for test
-    @connection = Dolphin::DataStore::Cassandra.new(
-      :keyspace => 'dolphin',
-      :hosts => Dolphin.settings['database']['hosts'],
-      :port => Dolphin.settings['database']['port']
-    ).connect
-    pending "Cassandra doens't exist" if @connection.nil?
 
-    if @connection
+    @connection = Dolphin::DataStore.current_store
+    @connection.connect
+
+    if @connection.closed?
+      pending "Failed cannect to database"
+    else
       @notification_id = 'system'
       @notification_values = {
         "email"=> {
@@ -27,7 +25,7 @@ describe 'Event API' do
         }
       }
       @notification_id = 'test'
-      @connection.insert('notifications', @notification_id, {
+      @connection.connect.insert('notifications', @notification_id, {
         'methods' => MultiJson.dump(@notification_values)
       })
 
@@ -42,7 +40,7 @@ describe 'Event API' do
       }
 
       @column_name = SimpleUUID::UUID.new(Time.now).to_guid
-      @connection.insert(
+      @connection.connect.insert(
         Dolphin::Models::Cassandra::Event::COLUMN_FAMILY,
         Dolphin::Models::Cassandra::Event::ROW_KEY,
         {@column_name => MultiJson.dump(@event_values)}

@@ -2,23 +2,15 @@ module Dolphin
   module DataStore
     include Dolphin::Util
 
-    def db
-      @connection ||= Dolphin::DataStore.create(Dolphin.settings['database']['adapter'].to_sym, {
-        :class => self
-      }).connect
-
-      if @connection.nil?
-        raise 'Connection to database failed'
-      else
-        @connection
-      end
+    def self.current_store
+      create(Dolphin.settings['database']['adapter'].to_sym)
     end
 
     def hosts
       Dolphin.settings['database']['hosts']
     end
 
-    def self.create(adapter, options)
+    def self.create(adapter)
 
       config = {
         :hosts => Dolphin.settings['database']['hosts'],
@@ -29,12 +21,9 @@ module Dolphin
 
       case adapter
         when :cassandra
-          # TODO: more better code
-          column_family = options[:class].class.name.split('::')[2].downcase + 's'
           klass = Dolphin::DataStore::Cassandra
           config.merge!({
             :keyspace => Dolphin::DataStore::Cassandra::KEYSPACE,
-            :cf => column_family
           })
         else
           raise NotImplementedError

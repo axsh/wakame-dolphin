@@ -100,8 +100,12 @@ module Dolphin
 
   module Models
     autoload :Base, 'dolphin/models/base'
-    autoload :Event, 'dolphin/models/event'
-    autoload :Notification, 'dolphin/models/notification'
+    module Cassandra
+      autoload :Base, 'dolphin/models/cassandra/base'
+      autoload :Event, 'dolphin/models/cassandra/event'
+      autoload :Notification, 'dolphin/models/cassandra/notification'
+    end
+
   end
 
   module Helpers
@@ -109,6 +113,10 @@ module Dolphin
     module Message
       autoload :ZabbixHelper, 'dolphin/helpers/message/zabbix_helper'
     end
+  end
+
+  module DataStore
+    autoload :Cassandra, 'dolphin/data_stores/cassandra'
   end
 
   # Celluloid supervisor

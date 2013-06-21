@@ -5,15 +5,11 @@ require 'spec_helper'
 describe 'Notification API' do
   before(:all) do
 
-    # TODO: Change keyspace for test
-    @connection = Dolphin::DataStore::Cassandra.new(
-      :keyspace => 'dolphin',
-      :hosts => Dolphin.settings['database']['hosts'],
-      :port => Dolphin.settings['database']['port']
-    ).connect
-    pending "Cassandra doens't exist" if @connection.nil?
-
-    if @connection
+    @connection = Dolphin::DataStore.current_store
+    @connection.connect
+    if @connection.closed?
+      pending "Failed cannect to database"
+    else
       @notification_values = {
         "email"=> {
           "to" => "foo@example.com,bar@example.com",
@@ -22,7 +18,7 @@ describe 'Notification API' do
         }
       }
       @notification_id = 'system'
-      @connection.insert('notifications', @notification_id, {
+      @connection.connect.insert('notifications', @notification_id, {
         'methods' => MultiJson.dump(@notification_values)
       })
     end

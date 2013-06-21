@@ -9,39 +9,39 @@ module Dolphin
 
     def get_notification(id)
       logger :info, "Get notification #{id}"
-      send('notification', 'get', id)
+      send('get_notification', id)
     end
 
     def put_event(event)
       logger :info, "Put event #{event}"
-      send('event', 'put', event)
+      send('put_event', event)
     end
 
     def get_event(params)
-      send('event', 'get', params)
+      send('get_event', params)
     end
 
     def put_notification(notification)
       logger :info, notification
       notification_id = notification[:id]
       methods = notification[:methods]
-      send('notification', 'put', notification_id, methods)
+      send('put_notification', notification_id, methods)
     end
 
     def delete_notification(notification)
       logger :info, notification
       notification_id = notification[:id]
-      send('notification', 'delete', notification_id)
+      send('delete_notification', notification_id)
     end
 
     private
-    def send(model_name, method, *args)
+    def send(action, *args)
       begin
-        # TODO: Fix Cassandra
-        klass = Dolphin::Models::Cassandra.const_get(model_name.capitalize)
-        k = klass.new
-        results = k.__send__(method, *args)
+        ds = DataStore.current_store
+        ds.connect
+        ds.__send__(action, *args)
       rescue => e
+        logger :error, e.backtrace
         logger :error, e
         false
       end
