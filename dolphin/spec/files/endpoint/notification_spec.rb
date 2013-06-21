@@ -18,9 +18,7 @@ describe 'Notification API' do
         }
       }
       @notification_id = 'system'
-      @connection.connect.insert('notifications', @notification_id, {
-        'methods' => MultiJson.dump(@notification_values)
-      })
+      @connection.put_notification(@notification_id, @notification_values)
     end
   end
 

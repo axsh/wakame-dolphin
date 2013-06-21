@@ -25,9 +25,7 @@ describe 'Event API' do
         }
       }
       @notification_id = 'test'
-      @connection.connect.insert('notifications', @notification_id, {
-        'methods' => MultiJson.dump(@notification_values)
-      })
+      @connection.put_notification(@notification_id, @notification_values)
 
       @message_type = "default"
       @event_values = []
@@ -45,6 +43,7 @@ describe 'Event API' do
         Dolphin::Models::Cassandra::Event::ROW_KEY,
         {@column_name => MultiJson.dump(@event_values)}
       )
+      @connection.put_event({:messages => @event_values})
 
     end
   end
