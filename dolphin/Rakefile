@@ -42,5 +42,20 @@ namespace :db do
     end
   end
 
+  namespace :mysql do
+
+    desc 'Create all database tables'
+    task :init do
+      Dolphin::DataStore.current_store.connect
+      Sequel.extension :migration
+      Sequel::Migrator.apply(Sequel::DATABASES.first, File.expand_path('../config/db/sequel/migrations', __FILE__), 9999)
+    end
+
+    desc 'Drop all database tables'
+    task :drop do
+      Dolphin::DataStore.current_store.connect
+      Sequel.extension :migration
+      Sequel::Migrator.apply(Sequel::DATABASES.first, File.expand_path('../config/db/sequel/migrations', __FILE__), 0)
+    end
   end
 end
