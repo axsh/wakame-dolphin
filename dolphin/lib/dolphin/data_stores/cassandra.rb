@@ -23,7 +23,6 @@ module Dolphin
       class UnAvailableNodeException < Exception; end
 
       PATH_SEPARATOR = ':'.freeze
-      KEYSPACE = 'dolphin'.freeze
 
       def initialize(config)
         @keyspace = config[:keyspace]
