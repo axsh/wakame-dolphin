@@ -107,6 +107,15 @@ module Dolphin
       autoload :Notification, 'dolphin/models/cassandra/notification'
     end
 
+    module Rdb
+      autoload :Base, 'dolphin/models/rdb/base'
+      autoload :Event, 'dolphin/models/rdb/event'
+      autoload :Notification, 'dolphin/models/rdb/notification'
+      module Orm
+        autoload :Event, 'dolphin/models/rdb/orm/event'
+        autoload :Notification, 'dolphin/models/rdb/orm/notification'
+      end
+    end
   end
 
   module Helpers
@@ -118,6 +127,8 @@ module Dolphin
 
   module DataStore
     autoload :Cassandra, 'dolphin/data_stores/cassandra'
+    autoload :Mysql, 'dolphin/data_stores/mysql'
+    autoload :BaseRdb, 'dolphin/data_stores/base_rdb'
   end
 
   # Celluloid supervisor
