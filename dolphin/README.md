@@ -3,6 +3,20 @@
 
 Dolphine is notification service.
 
+### Install for production
+
+Dolphin supported multi datastore are mysql and cassandra.
+
+#### DataStore cassandra
+```
+$ bundle install --without test development mysql
+```
+
+#### DataStore mysql
+```
+$ bundle install --without test development cassandra
+```
+
 ### Copy Settings File
 
 ```
@@ -54,3 +68,4 @@ $ ls ./tmp/mails
 ```
 $ bundle exec rake spec
 ```
+
