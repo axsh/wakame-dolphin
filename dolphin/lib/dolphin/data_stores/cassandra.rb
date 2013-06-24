@@ -26,7 +26,7 @@ module Dolphin
 
       def initialize(config)
         @keyspace = config[:keyspace]
-        raise "database hosts is blank" if config[:hosts].empty?
+        raise "database hosts is blank" if config[:hosts].blank?
         @hosts = config[:hosts].split(',')
         @port = config[:port]
         @max_retry_count = config[:max_retry_count] || 3
