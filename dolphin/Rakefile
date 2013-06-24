@@ -14,22 +14,23 @@ task :default => :spec
 namespace :db do
   namespace :cassandra do
 
-    db_config = Dolphin.settings['database']
-    @host = db_config['hosts'].split(',')[0]
-    @port = db_config['port']
-
-    @connect = Dolphin::DataBase::Cassandra.new({
-      :keyspace => Dolphin::DataBase::Cassandra::KEYSPACE,
-      :hosts => @host,
-      :port => @port
-    }).connect
-
     desc 'Clean cassandra'
     task :clean do |tasks|
       begin
-        @connect.drop_keyspace(Dolphin::DataBase::Cassandra::KEYSPACE)
+
+      db_config = Dolphin.settings['database']
+      @host = db_config['hosts'].split(',')[0]
+      @port = db_config['port']
+
+      @connect = Dolphin::DataStore::Cassandra.new({
+        :keyspace => Dolphin::DataStore::Cassandra::KEYSPACE,
+        :hosts => @host,
+        :port => @port
+      }).connect
+
+        @connect.drop_keyspace(Dolphin::DataStore::Cassandra::KEYSPACE)
       rescue => e
-        puts "Doesn't exist #{Dolphin::DataBase::Cassandra::KEYSPACE} keyspace or dropped already"
+        puts "Doesn't exist #{Dolphin::DataStore::Cassandra::KEYSPACE} keyspace or dropped already"
         exit
       end
     end
@@ -39,6 +40,7 @@ namespace :db do
       filename = Dolphin.db_path + '/cassandra_schema.txt'
       exec "/usr/bin/cassandra-cli -h #{@host} -p #{@port} -f #{filename}"
     end
+  end
 
   end
 end
