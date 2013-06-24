@@ -96,6 +96,7 @@ module Dolphin
   autoload :Util, 'dolphin/util'
   autoload :MessageBuilder, 'dolphin/message_builder'
   autoload :TemplateBuilder, 'dolphin/message_builder'
+  autoload :Mailer, 'dolphin/mailer'
   autoload :DataStore, 'dolphin/data_store'
 
   module Models
@@ -127,5 +128,5 @@ module Dolphin
   autoload :Worker, 'dolphin/worker'
   autoload :QueryProcessor, 'dolphin/query_processor'
   autoload :Sender, 'dolphin/sender'
-  autoload :Mailer, 'dolphin/mailer'
+
 end
