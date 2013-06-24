@@ -26,9 +26,13 @@ module Dolphin
           attach_request_params(request)
           logger :info, @params
           blk.call
+        rescue LoadError => e
+          logger :error, e
+          [400, {}, MultiJson.dump({
+            :message => 'Request faild.'
+          })]
         rescue => e
           logger :error, e
-
           [400, {}, MultiJson.dump({
             :message => e.message
           })]
