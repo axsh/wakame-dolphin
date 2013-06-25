@@ -11,7 +11,7 @@ before_install:
 
 before_script:
   - bundle exec rake db:mysql:init
-  - bundle exec ./bin/dolphin_server -c ./config/
+  - bundle exec ./bin/dolphin_server -c ./config/dolphin-mysql.conf.travis
 
 script:
   - bundle exec rspec ./spec/files/endpoint/
