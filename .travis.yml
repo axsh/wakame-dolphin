@@ -1,0 +1,24 @@
+language: ruby
+
+env:
+  - DB=mysql
+
+rvm:
+  - 1.9.3
+
+before_install:
+  - gem update bundler
+
+before_script:
+  - bundle exec rake db:mysql:init
+  - bundle exec ./bin/dolphin_server -c ./config/
+
+script:
+  - bundle exec rspec ./spec/files/endpoint/
+
+after_script:
+  - bundle exec rake db:mysql:drop
+
+branches:
+  only:
+    - master
