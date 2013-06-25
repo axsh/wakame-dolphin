@@ -1,4 +1,4 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
 gem 'reel', '0.3.0'
 gem 'actionmailer', '3.2.12'
