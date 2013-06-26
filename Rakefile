@@ -9,6 +9,10 @@ require "rspec/core/rake_task"
 desc 'Run rspec'
 RSpec::Core::RakeTask.new("spec")
 
+unless ENV['CONFIG_FILE'].nil?
+  Dolphin.settings(File.join(Dolphin.config_path, ENV['CONFIG_FILE']))
+end
+
 task :default => :spec
 
 namespace :db do
