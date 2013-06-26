@@ -1,7 +1,7 @@
 
-# Dolphine
+# Dolphin
 
-Dolphine is notification service.
+Dolphin is notification service.
 
 ### Install for production
 
