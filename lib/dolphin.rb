@@ -14,7 +14,12 @@ module Dolphin
     if @settings.nil?
 
       # overwrite
-      config = File.join(Dolphin.root_path, '/config/dolphin.conf') if config.blank?
+      if !ENV['CONFIG_FILE'].blank?
+        config = File.join(Dolphin.config_path, ENV['CONFIG_FILE'])
+      elsif config.blank?
+        config = File.join(Dolphin.config_path, 'dolphin.conf')
+      end
+
       if !File.exists?(config)
         puts "File not found #{config}"
         exit!
