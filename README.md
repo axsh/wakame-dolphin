@@ -1,4 +1,3 @@
-
 # Dolphin
 
 Dolphin is notification service.
@@ -69,3 +68,6 @@ $ ls ./tmp/mails
 $ bundle exec rake spec
 ```
 
+### Code Status
+
+[![Build Status](https://travis-ci.org/axsh/wakame-dolphin.png?branch=master)](https://travis-ci.org/axsh/wakame-dolphin)
