@@ -10,8 +10,8 @@ before_install:
   - gem update bundler
 
 before_script:
-  - bundle exec rake db:mysql:init
-  - bundle exec ./bin/dolphin_server -c ./config/dolphin-mysql.conf.travis
+  - CONFIG_FILE=dolphin-mysql.conf.travis bundle exec rake db:mysql:init
+  - CONFIG_FILE=dolphin-mysql.conf.travis bundle exec ./bin/dolphin_server -c ./config/dolphin-mysql.conf.travis
 
 script:
   - CONFIG_FILE=dolphin-mysql.conf.travis bundle exec rspec ./spec/files/endpoint/
