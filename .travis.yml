@@ -10,6 +10,7 @@ before_install:
   - gem update bundler
 
 before_script:
+  - mysql -e 'create database dolphin;'
   - CONFIG_FILE=dolphin-mysql.conf.travis bundle exec rake db:mysql:init
   - CONFIG_FILE=dolphin-mysql.conf.travis bundle exec ./bin/dolphin_server -c ./config/dolphin-mysql.conf.travis
 
