@@ -11,7 +11,9 @@ end
 
 require "rspec/core/rake_task"
 desc 'Run rspec'
-RSpec::Core::RakeTask.new("spec")
+RSpec::Core::RakeTask.new("spec") do |spec|
+  spec.pattern = FileList["spec/files/endpoint/*_spec.rb"]
+end
 
 task :default => :spec
 
