@@ -2,6 +2,7 @@ language: ruby
 
 env:
   - DB=mysql
+  - CONFIG_FILE=dolphin-mysql.conf
 
 rvm:
   - 1.9.3
@@ -11,14 +12,14 @@ before_install:
 
 before_script:
   - mysql -e 'create database dolphin;'
-  - CONFIG_FILE=dolphin-mysql.conf.travis bundle exec rake db:mysql:init
-  - CONFIG_FILE=dolphin-mysql.conf.travis bundle exec ./bin/dolphin_server -c ./config/dolphin-mysql.conf.travis
+  - bundle exec rake db:mysql:init
+  - bundle exec ./bin/dolphin_server -c ./config/dolphin-mysql.conf.travis
 
 script:
-  - CONFIG_FILE=dolphin-mysql.conf.travis bundle exec rspec ./spec/files/endpoint/
+  - bundle exec rspec ./spec/files/endpoint/
 
 after_script:
-  - CONFIG_FILE=dolphin-mysql.conf.travis bundle exec rake db:mysql:drop
+  - bundle exec rake db:mysql:drop
 
 branches:
   only:
