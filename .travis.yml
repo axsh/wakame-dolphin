@@ -2,7 +2,7 @@ language: ruby
 
 env:
   - DB=mysql
-  - CONFIG_FILE=dolphin-mysql.conf
+  - CONFIG_FILE=dolphin-mysql.conf.travis
 
 rvm:
   - 1.9.3
@@ -13,7 +13,7 @@ before_install:
 before_script:
   - mysql -e 'create database dolphin;'
   - bundle exec rake db:mysql:init
-  - bundle exec ./bin/dolphin_server -c ./config/dolphin-mysql.conf.travis &
+  - bundle exec ./bin/dolphin_server -c "./config/${CONFIG_FILE}" &
 
 script:
   - bundle exec rspec ./spec/files/endpoint/
