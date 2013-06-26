@@ -1,8 +1,7 @@
 language: ruby
 
 env:
-  - DB=mysql
-  - CONFIG_FILE=dolphin-mysql.conf.travis
+  - DB=mysql CONFIG_FILE=dolphin-mysql.conf.travis
 
 rvm:
   - 1.9.3
