@@ -14,10 +14,10 @@ before_script:
   - bundle exec ./bin/dolphin_server -c ./config/dolphin-mysql.conf.travis
 
 script:
-  - bundle exec rspec ./spec/files/endpoint/
+  - CONFIG_FILE=dolphin-mysql.conf.travis bundle exec rspec ./spec/files/endpoint/
 
 after_script:
-  - bundle exec rake db:mysql:drop
+  - CONFIG_FILE=dolphin-mysql.conf.travis bundle exec rake db:mysql:drop
 
 branches:
   only:
