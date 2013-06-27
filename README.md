@@ -71,3 +71,7 @@ $ bundle exec rake spec
 ### Code Status
 
 [![Build Status](https://travis-ci.org/axsh/wakame-dolphin.png?branch=master)](https://travis-ci.org/axsh/wakame-dolphin)
+
+### License
+
+Copyright (c) Axsh Co. Components are included distribution under LGPL 3.0 and Apache 2.0
