@@ -1,5 +1,7 @@
 # Dolphin
 
+[![Build Status](https://travis-ci.org/axsh/wakame-dolphin.png?branch=master)](https://travis-ci.org/axsh/wakame-dolphin)
+
 Dolphin is notification service.
 
 ### Install for production
@@ -67,10 +69,6 @@ $ ls ./tmp/mails
 ```
 $ bundle exec rake spec
 ```
-
-### Code Status
-
-[![Build Status](https://travis-ci.org/axsh/wakame-dolphin.png?branch=master)](https://travis-ci.org/axsh/wakame-dolphin)
 
 ### License
 
