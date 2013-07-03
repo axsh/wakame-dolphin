@@ -37,16 +37,4 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'celluloid', '= 0.12.4'
   spec.add_runtime_dependency 'celluloid-io', '= 0.12.1'
   spec.add_runtime_dependency 'nio4r', '= 0.4.3'
-
-  # :mysql
-  spec.add_runtime_dependency 'sequel', '3.48.0'
-  spec.add_runtime_dependency 'mysql2', '0.3.11'
-
-  # :cassandra
-  spec.add_runtime_dependency 'cassandra', '0.17.0'
-
-  # :development, :test
-  spec.add_development_dependency 'rspec', '2.13.0'
-  spec.add_development_dependency 'pry'
-  spec.add_development_dependency 'rb-readline'
 end
