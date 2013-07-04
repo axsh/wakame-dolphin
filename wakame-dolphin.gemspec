@@ -27,7 +27,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'extlib', '~> 0.9.16'
   spec.add_runtime_dependency 'multi_json', '1.6.1'
   spec.add_runtime_dependency 'rake', '= 10.0.3'
-  spec.add_runtime_dependency 'octarine', '= 0.0.3'
   spec.add_runtime_dependency 'parseconfig', '= 1.0.2'
   spec.add_runtime_dependency 'erubis', '= 2.7.0'
   spec.add_runtime_dependency 'mail-iso-2022-jp', '= 2.0.1'
