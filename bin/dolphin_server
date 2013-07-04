@@ -31,6 +31,8 @@ rescue => e
   exit!
 end
 
+Signal.trap(:INT, "EXIT")
+
 require 'ltsv'
 require 'celluloid'
 
