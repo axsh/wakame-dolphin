@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path('../lib', __FILE__)
-
+require 'dolphin/version'
 Gem::Specification.new do |spec|
   spec.name        = 'wakame-dolphin'
-  spec.version     = '0.0.2'
+  spec.version     = Dolphin::VERSION
   spec.platform    = Gem::Platform::RUBY
   spec.summary     = 'notification service'
   spec.description = 'notification service'
