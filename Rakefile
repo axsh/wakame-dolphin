@@ -5,7 +5,7 @@ require "bundler/setup"
 
 require File.join(File.expand_path('../', __FILE__), 'lib/dolphin')
 
-Dolphin.load_settings
+Dolphin.load_setting
 
 require "rspec/core/rake_task"
 desc 'Run rspec'
