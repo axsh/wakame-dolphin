@@ -3,7 +3,8 @@
 require "rubygems"
 require "bundler/setup"
 
-require File.join(File.expand_path('../', __FILE__), 'lib/dolphin')
+$LOAD_PATH.unshift File.expand_path('../lib', __FILE__)
+require 'dolphin'
 
 Dolphin.load_setting
 
