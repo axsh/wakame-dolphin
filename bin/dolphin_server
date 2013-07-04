@@ -56,7 +56,7 @@ module Dolphin
   def self.run(options)
 
     # init config_file
-    Dolphin.settings(options[:config_file])
+    Dolphin.load_setting(options[:config_file])
 
     if RUBY_VERSION.to_f >= 2
       # Celluloid::TaskFiber by default

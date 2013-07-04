@@ -9,26 +9,20 @@ Signal.trap(:INT, "EXIT")
 $LOAD_PATH.unshift File.expand_path('../', __FILE__)
 
 module Dolphin
-  def self.settings(config='')
-
-    if @settings.nil?
-
-      # overwrite
-      if !ENV['CONFIG_FILE'].blank?
-        config = File.join(Dolphin.config_path, ENV['CONFIG_FILE'])
-      elsif config.blank?
-        config = File.join(Dolphin.config_path, 'dolphin.conf')
-      end
-
-      if !File.exists?(config)
-        puts "File not found #{config}"
-        exit!
-      end
-
-      # TODO:validation
-      @config = config
-      @settings = ParseConfig.new(config)
+  def self.load_setting(path=nil)
+    path ||= ENV['CONFIG_FILE'] || File.join(Dolphin.config_path, 'dolphin.conf')
+    
+    if !File.exists?(path)
+      STDERR.puts "Not found configuration file: #{path}"
+      exit!
     end
+
+    @config = path
+    @settings = ParseConfig.new(path)
+  end
+  
+  def self.settings
+    raise "Configuration file is not loaded yet." if @settings.nil?
     @settings
   end
 
