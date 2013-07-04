@@ -90,7 +90,7 @@ module Dolphin
     # TODO: Chanage to rackup
 
     server_settings = Dolphin.settings['server']
-    RequestHandler.new(server_settings['host'], server_settings['port'])
+    RequestHandler.new(server_settings['host'], server_settings['port']).start
 
     Manager.run
   end

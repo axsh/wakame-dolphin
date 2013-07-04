@@ -32,6 +32,8 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'erubis', '= 2.7.0'
   spec.add_runtime_dependency 'mail-iso-2022-jp', '= 2.0.1'
   spec.add_runtime_dependency 'simple_uuid', '= 0.2.0'
+  spec.add_runtime_dependency 'sinatra', '~> 1.4.0'
+  spec.add_runtime_dependency 'sinatra-contrib', '~> 1.4.0'
 
   # Fixed version for reel
   spec.add_runtime_dependency 'celluloid', '= 0.12.4'
