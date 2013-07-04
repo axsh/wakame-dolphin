@@ -13,7 +13,7 @@ before_install:
 before_script:
   - mysql -e 'create database dolphin;'
   - bundle exec rake db:mysql:init
-  - bundle exec ./bin/dolphin_server -c "./config/${CONFIG_FILE}" &
+  - bundle exec ./bin/dolphin_server &
 
 script:
   - bundle exec rspec ./spec/files/endpoint/
