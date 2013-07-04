@@ -16,7 +16,7 @@ before_script:
   - bundle exec ./bin/dolphin_server &
 
 script:
-  - bundle exec rspec ./spec/files/endpoint/
+  - bundle exec rake spec
 
 after_script:
   - bundle exec rake db:mysql:drop
