@@ -4,8 +4,6 @@ require 'parseconfig'
 require 'ostruct'
 require 'extlib/blank'
 
-Signal.trap(:INT, "EXIT")
-
 $LOAD_PATH.unshift File.expand_path('../', __FILE__)
 
 module Dolphin
