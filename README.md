@@ -1,6 +1,6 @@
 # Dolphin
 
-[![Build Status](https://travis-ci.org/axsh/wakame-dolphin.png?branch=master)](https://travis-ci.org/axsh/wakame-dolphin) [![Code Climate](https://codeclimate.com/github/axsh/wakame-dolphin.png)](https://codeclimate.com/github/axsh/wakame-dolphin)
+[![Gem Version](https://badge.fury.io/rb/wakame-dolphin.png)](http://badge.fury.io/rb/wakame-dolphin) [![Build Status](https://travis-ci.org/axsh/wakame-dolphin.png?branch=master)](https://travis-ci.org/axsh/wakame-dolphin) [![Code Climate](https://codeclimate.com/github/axsh/wakame-dolphin.png)](https://codeclimate.com/github/axsh/wakame-dolphin)
 
 Dolphin is notification service.
 
