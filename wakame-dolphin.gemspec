@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path('../lib', __FILE__)
-
+require 'dolphin/version'
 Gem::Specification.new do |spec|
   spec.name        = 'wakame-dolphin'
-  spec.version     = '0.0.2'
+  spec.version     = Dolphin::VERSION
   spec.platform    = Gem::Platform::RUBY
   spec.summary     = 'notification service'
   spec.description = 'notification service'
@@ -27,11 +27,12 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'extlib', '~> 0.9.16'
   spec.add_runtime_dependency 'multi_json', '1.6.1'
   spec.add_runtime_dependency 'rake', '= 10.0.3'
-  spec.add_runtime_dependency 'octarine', '= 0.0.3'
   spec.add_runtime_dependency 'parseconfig', '= 1.0.2'
   spec.add_runtime_dependency 'erubis', '= 2.7.0'
   spec.add_runtime_dependency 'mail-iso-2022-jp', '= 2.0.1'
   spec.add_runtime_dependency 'simple_uuid', '= 0.2.0'
+  spec.add_runtime_dependency 'sinatra', '~> 1.4.0'
+  spec.add_runtime_dependency 'sinatra-contrib', '~> 1.4.0'
 
   # Fixed version for reel
   spec.add_runtime_dependency 'celluloid', '= 0.12.4'
