@@ -8,6 +8,17 @@ module Dolphin
 
     include Dolphin::Helpers::Message::ZabbixHelper
 
+    # Load plugable helpers
+    if Dolphin.settings['template']
+      Dir.glob(File.join(Dolphin.settings['template']['helper_module_path'], '*_helper.rb')).each {|f|
+        require f
+      }
+    end
+
+    Dolphin::Helpers::Message.constants.each {|c|
+      include Dolphin::Helpers::Message.const_get(c)
+    }
+
     def build(template_str, params)
       template = Erubis::Eruby.new(template_str)
       if params.is_a? Hash
@@ -77,13 +88,22 @@ module Dolphin
 
       private
       def template(template_id)
-        file_path = File.join(template_path, template_file(template_id))
-        if File.exists? file_path
-          File.read(file_path, :encoding => Encoding::UTF_8)
-        else
-          logger :warn, "File not found #{file_path}"
-          nil
+        load_target_templates = []
+
+        if Dolphin.settings['template']
+          load_target_templates << File.join(Dolphin.settings['template']['template_path'], 'email')
         end
+
+        load_target_templates << template_path
+        load_target_templates.each {|path|
+          file_path = File.join(path, template_file(template_id))
+          if File.exists? file_path
+            return File.read(file_path, :encoding => Encoding::UTF_8)
+          else
+            logger :warn, "File not found #{file_path}"
+            return nil
+          end
+        }
       end
 
       def template_file(template_id)

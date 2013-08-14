@@ -24,3 +24,10 @@ type = file
 [logger]
 format = human_readable
 # format = ltsv
+
+[template]
+template_path = ''
+helper_module_path = ''
+
+[template_variables]
+# foo = bar
