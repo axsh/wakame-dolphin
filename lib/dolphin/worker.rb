@@ -60,7 +60,7 @@ module Dolphin
 
         message = build_message(sender_type, message_template_id, build_params)
         if message.nil?
-          log_message = "Failed to build message: #{message}"
+          log_message = "Failed to build message: #{build_params}"
           logger :error, log_message
           # Does not do response to Request Handler.
           next
