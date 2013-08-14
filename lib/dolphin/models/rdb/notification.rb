@@ -7,7 +7,9 @@ module Dolphin::Models
     class Notification < Base
       def get(id)
         res = db.find(:uuid => id)
-        MultiJson.load(res.value)
+        if res
+          MultiJson.load(res.value)
+        end
       end
 
       def put(id, methods)
