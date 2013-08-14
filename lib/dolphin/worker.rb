@@ -59,13 +59,13 @@ module Dolphin
         end
 
         message = build_message(sender_type, message_template_id, build_params)
-        message.event_id = event_id
-
         if message.nil?
           log_message = "Failed to build message: #{message}"
           logger :error, log_message
           # Does not do response to Request Handler.
           next
+        else
+          message.event_id = event_id
         end
 
         logger :info, "Send notification from Worker #{message}"
