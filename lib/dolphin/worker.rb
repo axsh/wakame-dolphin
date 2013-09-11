@@ -16,7 +16,7 @@ module Dolphin
       future_event = query_processor.future.put_event(event_object)
 
       # if notification_id not exists, doesn't send notification.
-      unless notification_id
+      if notification_id.blank?
         return SuccessObject.new
       end
 
