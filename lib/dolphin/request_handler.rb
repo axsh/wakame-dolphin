@@ -75,14 +75,14 @@ module Dolphin
 
     post '/events' do
       raise 'Nothing parameters.' if @params.blank?
-      
+
       event = {}
       event[:notification_id] = @notification_id
       event[:message_type] = @message_type
       event[:messages] = @params
-      
+
       events = worker.future.put_event(event)
-      
+
       # always success because put_event is async action.
       response_params = {
         :message => 'OK'
@@ -93,15 +93,15 @@ module Dolphin
     get '/events' do
       limit = @params['limit'].blank? ? GET_EVENT_LIMIT : @params['limit'].to_i
       raise "Requested over the limit. Limited to #{GET_EVENT_LIMIT}" if limit > GET_EVENT_LIMIT
-      
+
       event = {}
       event[:count] = limit
       event[:start_time] = parse_time(@params['start_time']) unless @params['start_time'].blank?
       event[:start_id] = @params['start_id'] unless @params['start_id'].blank?
-      
+
       events = worker.get_event(event)
       raise events.message if events.fail?
-      
+
       response_params = {
         :results => events.message,
         :message => 'OK'
@@ -112,14 +112,14 @@ module Dolphin
 
     get '/notifications' do
       required 'notification_id'
-      
+
       notification = {}
       notification[:id] = @notification_id
-      
+
       result = worker.get_notification(notification)
       raise result.message if result.fail?
       raise "Not found notification id" if result.message.nil?
-      
+
       response_params = {
         :results => result.message,
         :message => 'OK'
@@ -130,16 +130,16 @@ module Dolphin
     post '/notifications' do
       required 'notification_id'
       raise 'Nothing parameters.' if @params.blank?
-      
+
       unsupported_sender_types = @params.keys - Sender::TYPES
       raise "Unsuppoted sender types: #{unsupported_sender_types.join(',')}" unless unsupported_sender_types.blank?
-      
+
       notification = {}
       notification[:id] = @notification_id
       notification[:methods] = @params
       result = worker.put_notification(notification)
       raise result.message if result.fail?
-      
+
       response_params = {
         :message => 'OK'
       }
@@ -148,13 +148,13 @@ module Dolphin
 
     delete '/notifications' do
       required 'notification_id'
-      
+
       notification = {}
       notification[:id] = @notification_id
-      
+
       result = worker.delete_notification(notification)
       raise result.message if result.fail?
-      
+
       response_params = {
         :message => 'OK'
       }
