@@ -43,6 +43,34 @@ module Dolphin
     respond_to :json
     set :show_exceptions, false
 
+    # Rack middleware that rejects the request with unsupported content type.
+    # Returns 415 (Unsupported Media Type) for the unsupported request.
+    #
+    # Rack's nested param parser gets crashed from the request of
+    # incompatible header and body pair. so this middleware validates the request
+    # earlier than the parser runs.
+    class ValidateContentType
+      def initialize(app, content_types=[])
+        @app = app
+        @content_types = content_types
+      end
+
+      def call(env)
+        if env['REQUEST_METHOD'] == 'POST'
+          unless @content_types.find{ |c| c.downcase == env['CONTENT_TYPE'].downcase }
+            return [415,
+                    {'Content-Type'=>'application/json'},
+                    [MultiJson.dump({
+                      "message" => "Unsupported Content Type: #{env['CONTENT_TYPE']}"
+                    })]
+                  ]
+          end
+        end
+        @app.call(env)
+      end
+    end
+    use ValidateContentType, ['application/json', 'text/json'].freeze
+
     GET_EVENT_LIMIT = 3000.freeze
 
     before do
