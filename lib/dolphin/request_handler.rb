@@ -18,7 +18,13 @@ module Dolphin
       Celluloid::Actor[:request_handler_rack_pool] = ::Reel::RackWorker.pool(size: options[:workers], args: [self])
 
       ::Reel::Server.supervise_as(:request_handler, options[:host], options[:port]) do |connection|
-        Celluloid::Actor[:request_handler_rack_pool].handle(connection.detach)
+        begin
+          Celluloid::Actor[:request_handler_rack_pool].handle(connection.detach)
+        rescue => e
+
+          # Doesn't ouput error log because log output from reel.
+          connection.close
+        end
       end
       logger :info, "Running on ruby #{RUBY_VERSION} with selected #{Celluloid::task_class}"
       logger :info, "Listening on http://#{options[:host]}:#{options[:port]}"
