@@ -35,17 +35,16 @@ module Dolphin
       Celluloid::Actor[:request_handler_rack_pool].terminate!
     end
   end
-  
+
   class RequestApp < Sinatra::Base
     include Dolphin::Util
     helpers Dolphin::Helpers::RequestHelper
     register Sinatra::RespondWith
-
     respond_to :json
     set :show_exceptions, false
 
     GET_EVENT_LIMIT = 3000.freeze
-    
+
     before do
       logger :info, {
         :host => request.host,
@@ -56,7 +55,11 @@ module Dolphin
 
       if request.post?
         v = request.body
-        @params = MultiJson.load(v)
+        begin
+          @params = MultiJson.load(v)
+        rescue => e
+          raise e.message.split(':')[1].strip!
+        end
       elsif request.get?
         @params = request.params
       end
