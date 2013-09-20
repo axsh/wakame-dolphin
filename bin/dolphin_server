@@ -57,6 +57,9 @@ module Dolphin
 
   def self.run(options)
 
+    # Default env is production.
+    ENV['RACK_ENV'] ||= 'production'
+
     # init config_file
     Dolphin.load_setting(options[:config_file])
 
