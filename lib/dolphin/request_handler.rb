@@ -42,6 +42,8 @@ module Dolphin
     register Sinatra::RespondWith
 
     respond_to :json
+    set :show_exceptions, false
+
     GET_EVENT_LIMIT = 3000.freeze
     
     before do
