@@ -117,6 +117,18 @@ describe 'Event API' do
     expect(res['message']).to eql 'OK'
   end
 
+  it 'expect to post sending content-type missing' do
+    content_type = 'application/x-www-form-urlencoded'
+    res = post('/events',
+      :headers => {
+        'Content-Type' => content_type,
+      },
+      :body => {
+        'message' => 'Alert!!!!'
+    }.to_json)
+
+    expect(res['message']).to eql "Unsupported Content Type: #{content_type}"
+  end
   before(:all) do
     FileUtils.rm(@temporary_mail) if File.exists?(@temporary_mail)
   end
