@@ -18,7 +18,13 @@ module Dolphin
       Celluloid::Actor[:request_handler_rack_pool] = ::Reel::RackWorker.pool(size: options[:workers], args: [self])
 
       ::Reel::Server.supervise_as(:request_handler, options[:host], options[:port]) do |connection|
-        Celluloid::Actor[:request_handler_rack_pool].handle(connection.detach)
+        begin
+          Celluloid::Actor[:request_handler_rack_pool].handle(connection.detach)
+        rescue => e
+
+          # Doesn't ouput error log because log output from reel.
+          connection.close
+        end
       end
       logger :info, "Running on ruby #{RUBY_VERSION} with selected #{Celluloid::task_class}"
       logger :info, "Listening on http://#{options[:host]}:#{options[:port]}"
@@ -29,15 +35,44 @@ module Dolphin
       Celluloid::Actor[:request_handler_rack_pool].terminate!
     end
   end
-  
+
   class RequestApp < Sinatra::Base
     include Dolphin::Util
     helpers Dolphin::Helpers::RequestHelper
     register Sinatra::RespondWith
-
     respond_to :json
+    set :show_exceptions, false
+
+    # Rack middleware that rejects the request with unsupported content type.
+    # Returns 415 (Unsupported Media Type) for the unsupported request.
+    #
+    # Rack's nested param parser gets crashed from the request of
+    # incompatible header and body pair. so this middleware validates the request
+    # earlier than the parser runs.
+    class ValidateContentType
+      def initialize(app, content_types=[])
+        @app = app
+        @content_types = content_types
+      end
+
+      def call(env)
+        if env['REQUEST_METHOD'] == 'POST'
+          unless @content_types.find{ |c| c.downcase == env['CONTENT_TYPE'].downcase }
+            return [415,
+                    {'Content-Type'=>'application/json'},
+                    [MultiJson.dump({
+                      "message" => "Unsupported Content Type: #{env['CONTENT_TYPE']}"
+                    })]
+                  ]
+          end
+        end
+        @app.call(env)
+      end
+    end
+    use ValidateContentType, ['application/json', 'text/json'].freeze
+
     GET_EVENT_LIMIT = 3000.freeze
-    
+
     before do
       logger :info, {
         :host => request.host,
@@ -48,27 +83,34 @@ module Dolphin
 
       if request.post?
         v = request.body
-        @params = MultiJson.load(v)
+        begin
+          @params = MultiJson.load(v)
+        rescue => e
+          raise e.message.split(':')[1].strip!
+        end
       elsif request.get?
         @params = request.params
       end
     end
 
-    error(RuntimeError) do
+    error(RuntimeError) do |e|
       status(400)
-      respond_with {message:'Failed'}
+      response_params =  {
+        :message => e.message
+      }
+      respond_with response_params
     end
 
     post '/events' do
       raise 'Nothing parameters.' if @params.blank?
-      
+
       event = {}
       event[:notification_id] = @notification_id
       event[:message_type] = @message_type
       event[:messages] = @params
-      
+
       events = worker.future.put_event(event)
-      
+
       # always success because put_event is async action.
       response_params = {
         :message => 'OK'
@@ -79,15 +121,15 @@ module Dolphin
     get '/events' do
       limit = @params['limit'].blank? ? GET_EVENT_LIMIT : @params['limit'].to_i
       raise "Requested over the limit. Limited to #{GET_EVENT_LIMIT}" if limit > GET_EVENT_LIMIT
-      
+
       event = {}
       event[:count] = limit
       event[:start_time] = parse_time(@params['start_time']) unless @params['start_time'].blank?
       event[:start_id] = @params['start_id'] unless @params['start_id'].blank?
-      
+
       events = worker.get_event(event)
       raise events.message if events.fail?
-      
+
       response_params = {
         :results => events.message,
         :message => 'OK'
@@ -98,14 +140,14 @@ module Dolphin
 
     get '/notifications' do
       required 'notification_id'
-      
+
       notification = {}
       notification[:id] = @notification_id
-      
+
       result = worker.get_notification(notification)
       raise result.message if result.fail?
       raise "Not found notification id" if result.message.nil?
-      
+
       response_params = {
         :results => result.message,
         :message => 'OK'
@@ -116,16 +158,16 @@ module Dolphin
     post '/notifications' do
       required 'notification_id'
       raise 'Nothing parameters.' if @params.blank?
-      
+
       unsupported_sender_types = @params.keys - Sender::TYPES
       raise "Unsuppoted sender types: #{unsupported_sender_types.join(',')}" unless unsupported_sender_types.blank?
-      
+
       notification = {}
       notification[:id] = @notification_id
       notification[:methods] = @params
       result = worker.put_notification(notification)
       raise result.message if result.fail?
-      
+
       response_params = {
         :message => 'OK'
       }
@@ -134,13 +176,13 @@ module Dolphin
 
     delete '/notifications' do
       required 'notification_id'
-      
+
       notification = {}
       notification[:id] = @notification_id
-      
+
       result = worker.delete_notification(notification)
       raise result.message if result.fail?
-      
+
       response_params = {
         :message => 'OK'
       }
