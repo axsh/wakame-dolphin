@@ -65,9 +65,12 @@ module Dolphin
       end
     end
 
-    error(RuntimeError) do
+    error(RuntimeError) do |e|
       status(400)
-      respond_with {message:'Failed'}
+      response_params =  {
+        :message => e.message
+      }
+      respond_with response_params
     end
 
     post '/events' do
