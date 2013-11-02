@@ -3,8 +3,8 @@ source 'https://rubygems.org'
 gemspec
 
 group :mysql do
-  gem 'sequel', '3.48.0'
-  gem 'mysql2', '0.3.11'
+  gem 'sequel', '4.4.0'
+  gem 'mysql2', '0.3.13'
 end
 
 group :cassandra do
