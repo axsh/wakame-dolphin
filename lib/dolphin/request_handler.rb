@@ -42,11 +42,14 @@ module Dolphin
 
       def call(env)
         if env['REQUEST_METHOD'] == 'POST'
-          unless @content_types.find{ |c| c.downcase == env['CONTENT_TYPE'].downcase }
+          # env['CONTENT_TYPE'] is not sent from reel-rack 0.1 due to
+          # its regression. so needs to take care for both cases.
+          request_content_type = (env['CONTENT_TYPE'] || env['HTTP_CONTENT_TYPE'])
+          unless @content_types.find{ |c| c.downcase == request_content_type.downcase }
             return [415,
                     {'Content-Type'=>'application/json'},
                     [MultiJson.dump({
-                      "message" => "Unsupported Content Type: #{env['CONTENT_TYPE']}"
+                      "message" => "Unsupported Content Type: #{request_content_type}"
                     })]
                   ]
           end
