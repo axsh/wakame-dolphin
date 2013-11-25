@@ -20,3 +20,5 @@ RSpec.configure do |c|
   c.include WebRequestHelper
   c.include TestHelper
 end
+
+Celluloid.logger = Logger.new('/dev/null')
