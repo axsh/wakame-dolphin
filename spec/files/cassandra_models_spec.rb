@@ -3,9 +3,11 @@
 require 'spec_helper'
 
 describe 'Test Dolphin::Models for Cassandra' do
+  KEYSPACE = 'test_dolphin'.freeze
+
   before(:all) do
     @connection = Dolphin::DataStore::Cassandra.new(
-      :keyspace => 'dolphin_test',
+      :keyspace => KEYSPACE,
       :hosts => Dolphin.settings['database']['hosts'],
       :port => Dolphin.settings['database']['port']
     )
@@ -15,7 +17,7 @@ describe 'Test Dolphin::Models for Cassandra' do
   describe Dolphin::Models::Cassandra::Event do
     before(:all) do
       if @connection.closed?
-        pending "Cassandra doens't exist"
+        pending "keyspace:#{KEYSPACE} doens't exist"
       else
         @event_values = []
         @event_values << {
