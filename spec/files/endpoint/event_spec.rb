@@ -29,7 +29,7 @@ describe 'Event API' do
       @notification_id = 'test'
       @connection.put_notification(@notification_id, @notification_values)
 
-      @message_type = "default"
+      @message_type = "test"
       @event_values = {
         'notification_id' => @notification_id,
         'message_type' => @message_type,
@@ -100,11 +100,15 @@ describe 'Event API' do
       'to' => @mail_to
     })
 
-    mail = Dolphin::Mailer.read_iso2022_jp_mail(@temporary_mail)
-    expect(mail[:from]).to eql Dolphin.settings['mail']['from']
-    expect(mail[:to]).to eql @mail_to
-    expect(mail[:subject]).to eql template.subject
-    expect(mail[:body]).to eql template.body
+    expect(template).to be
+
+    if template
+      mail = Dolphin::Mailer.read_iso2022_jp_mail(@temporary_mail)
+      expect(mail[:from]).to eql Dolphin.settings['mail']['from']
+      expect(mail[:to]).to eql @mail_to
+      expect(mail[:subject]).to eql template.subject
+      expect(mail[:body]).to eql template.body
+    end
   end
 
   it 'expect to post event only' do
