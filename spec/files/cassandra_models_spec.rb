@@ -11,7 +11,11 @@ describe 'Test Dolphin::Models for Cassandra' do
       :hosts => Dolphin.settings['database']['hosts'],
       :port => Dolphin.settings['database']['port']
     )
-    @connection.connect
+    @cassandra = @connection.connect
+  end
+
+  after(:all) do
+    @cassandra.clear_keyspace!
   end
 
   describe Dolphin::Models::Cassandra::Event do
@@ -19,6 +23,8 @@ describe 'Test Dolphin::Models for Cassandra' do
       if @connection.closed?
         pending "keyspace:#{KEYSPACE} doens't exist"
       else
+        @cassandra.clear_keyspace!
+
         @event_values = []
         @event_values << {
           'notification_id' => "system",
