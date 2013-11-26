@@ -24,3 +24,7 @@ type = file
 [logger]
 format = human_readable
 # format = ltsv
+
+[template]
+template_path = './spec/conf/templates/'
+helper_module_path = './spec/conf/helpers/'
