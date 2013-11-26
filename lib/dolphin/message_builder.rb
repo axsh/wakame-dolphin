@@ -9,8 +9,8 @@ module Dolphin
     include Dolphin::Helpers::Message::ZabbixHelper
 
     # Load plugable helpers
-    if Dolphin.settings['template']
-      Dir.glob(File.join(Dolphin.settings['template']['helper_module_path'], '*_helper.rb')).each {|f|
+    if Dolphin.settings['template'] && Dolphin.settings['template'].has_key?('helper_module_path')
+      Dir.glob(File.join(File.expand_path(Dolphin.settings['template']['helper_module_path']), '*_helper.rb')).each {|f|
         require f
       }
     end
@@ -93,8 +93,8 @@ module Dolphin
       def template(template_id)
         load_target_templates = []
 
-        if Dolphin.settings['template']
-          load_target_templates << File.join(Dolphin.settings['template']['template_path'], 'email')
+        if Dolphin.settings['template'] && Dolphin.settings['template'].has_key?('template_path')
+          load_target_templates << File.join(File.expand_path(Dolphin.settings['template']['template_path']), 'email')
         end
 
         load_target_templates << template_path
