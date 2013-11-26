@@ -29,7 +29,7 @@ describe 'Event API' do
       @notification_id = 'test'
       @connection.put_notification(@notification_id, @notification_values)
 
-      @message_type = "test"
+      @message_type = "default"
       @event_values = {
         'notification_id' => @notification_id,
         'message_type' => @message_type,
