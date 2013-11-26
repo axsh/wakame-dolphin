@@ -1,5 +1,6 @@
 require "net/http"
 require "uri"
+require 'json'
 
 module WebRequestHelper
   def get(path, params)
