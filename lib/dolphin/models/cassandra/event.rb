@@ -2,6 +2,7 @@
 
 require 'multi_json'
 require 'simple_uuid'
+require 'time'
 
 module Dolphin
   module Models
