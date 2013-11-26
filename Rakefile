@@ -11,7 +11,12 @@ Dolphin.load_setting
 require "rspec/core/rake_task"
 desc 'Run rspec'
 RSpec::Core::RakeTask.new("spec") do |spec|
-  spec.pattern = FileList["spec/files/endpoint/*_spec.rb"]
+  spec.pattern = FileList["spec/files/endpoint/*_spec.rb",
+                          "spec/files/message_builder_spec.rb"]
+
+  if Dolphin.settings['database']['adapter'] == 'cassandra'
+    spec.pattern << 'spec/files/cassandra_models_spec.rb'
+  end
 end
 
 task :default => :spec

@@ -1,5 +1,6 @@
 require "net/http"
 require "uri"
+require 'json'
 
 module WebRequestHelper
   def get(path, params)
@@ -30,11 +31,15 @@ module WebRequestHelper
   end
 
   def request(net, uri)
-    http = Net::HTTP.new(uri.host, uri.port)
-    # http.set_debug_output $stderr
-    http.start do |h|
-      response = h.request(net)
-      JSON.parse(response.body)
+    begin
+      http = Net::HTTP.new(uri.host, uri.port)
+      # http.set_debug_output $stderr
+      http.start do |h|
+        response = h.request(net)
+        JSON.parse(response.body)
+      end
+    rescue => e
+      pending e.message
     end
   end
 end
