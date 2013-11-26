@@ -4,6 +4,8 @@ require 'spec_helper'
 
 describe 'Event API' do
 
+  GET_EVENT_LIMIT = 1.freeze
+
   before(:all) do
 
     # Mail Setting
@@ -41,21 +43,21 @@ describe 'Event API' do
   end
 
   it 'expect to get events' do
-    res = get('/events', :headers => {
+    res = get("/events?limit=#{GET_EVENT_LIMIT}", :headers => {
       'Content-Type' =>'application/json',
     })
     expect(res['message']).to eql 'OK'
   end
 
   it 'expect to get last event' do
-    events = get('/events', :headers => {
+    events = get("/events?limit=#{GET_EVENT_LIMIT}", :headers => {
       'Content-Type' =>'application/json',
     })
     last_event = events['results'][-1]
     last_event_id = last_event['id']
 
     query_string = '?' + [
-      "count=1",
+      "limit=#{GET_EVENT_LIMIT}",
       "start_id=#{SimpleUUID::UUID.new(last_event_id).to_guid}"
     ].join('&')
 
@@ -98,11 +100,15 @@ describe 'Event API' do
       'to' => @mail_to
     })
 
-    mail = Dolphin::Mailer.read_iso2022_jp_mail(@temporary_mail)
-    expect(mail[:from]).to eql Dolphin.settings['mail']['from']
-    expect(mail[:to]).to eql @mail_to
-    expect(mail[:subject]).to eql template.subject
-    expect(mail[:body]).to eql template.body
+    expect(template).to be
+
+    if template
+      mail = Dolphin::Mailer.read_iso2022_jp_mail(@temporary_mail)
+      expect(mail[:from]).to eql Dolphin.settings['mail']['from']
+      expect(mail[:to]).to eql @mail_to
+      expect(mail[:subject]).to eql template.subject
+      expect(mail[:body]).to eql template.body
+    end
   end
 
   it 'expect to post event only' do

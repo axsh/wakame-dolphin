@@ -49,8 +49,10 @@ module Dolphin
         begin
           template = TemplateBuilder.new
           template.build(str, params).encode("UTF-8")
-        rescue SyntaxError => e
+        rescue => e
           logger :error, e
+          logger :error, e.backtrace
+          nil
         end
       end
     end
@@ -72,6 +74,7 @@ module Dolphin
         end
 
         message = build_message(body_template, params['messages'])
+        return nil  if message.nil?
         subject, body = message.split(MESSAGE_BOUNDARY)
         subject.strip! unless subject.nil?
         body.strip! unless body.nil?
