@@ -18,4 +18,9 @@ module TestHelper
       sleep sleep_time
     end
   end
+
+  def close_wait_socket_count
+    port = Dolphin.settings["server"]["port"]
+    `ss -n | egrep #{port} | grep CLOSE-WAIT | wc -l`.strip.to_i
+  end
 end

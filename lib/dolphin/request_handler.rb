@@ -1,38 +1,23 @@
 # -*- coding: utf-8 -*-
 
-require 'reel'
+require 'reel/rack/server'
 require 'extlib/blank'
 require 'sinatra/base'
 require 'sinatra/respond_with'
 
 module Dolphin
-  class RequestHandler < Rack::Handler::Reel
+  #class RequestHandler < Rack::Handler::Reel
+  class RequestHandler < Reel::Rack::Server
     include Dolphin::Util
-
+    
     def initialize(host, port)
-      super({:host=>host, :port=>port, :app=>RequestApp.new})
+      # Default env is production.
+      ENV['RACK_ENV'] ||= 'production'
+
+      super(RequestApp.new, {:Host=>host, :Port=>port})
       logger :info, "Load settings in #{Dolphin.config}"
-    end
-
-    def start
-      Celluloid::Actor[:request_handler_rack_pool] = ::Reel::RackWorker.pool(size: options[:workers], args: [self])
-
-      ::Reel::Server.supervise_as(:request_handler, options[:host], options[:port]) do |connection|
-        begin
-          Celluloid::Actor[:request_handler_rack_pool].handle(connection.detach)
-        rescue => e
-
-          # Doesn't ouput error log because log output from reel.
-          connection.close
-        end
-      end
       logger :info, "Running on ruby #{RUBY_VERSION} with selected #{Celluloid::task_class}"
-      logger :info, "Listening on http://#{options[:host]}:#{options[:port]}"
-    end
-
-    def stop
-      Celluloid::Actor[:request_handler].terminate!
-      Celluloid::Actor[:request_handler_rack_pool].terminate!
+      logger :info, "Listening on http://#{host}:#{port}"
     end
   end
 
@@ -57,11 +42,14 @@ module Dolphin
 
       def call(env)
         if env['REQUEST_METHOD'] == 'POST'
-          unless @content_types.find{ |c| c.downcase == env['CONTENT_TYPE'].downcase }
+          # env['CONTENT_TYPE'] is not sent from reel-rack 0.1 due to
+          # its regression. so needs to take care for both cases.
+          request_content_type = (env['CONTENT_TYPE'] || env['HTTP_CONTENT_TYPE'])
+          unless @content_types.find{ |c| c.downcase == request_content_type.downcase }
             return [415,
                     {'Content-Type'=>'application/json'},
                     [MultiJson.dump({
-                      "message" => "Unsupported Content Type: #{env['CONTENT_TYPE']}"
+                      "message" => "Unsupported Content Type: #{request_content_type}"
                     })]
                   ]
           end

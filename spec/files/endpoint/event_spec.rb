@@ -123,7 +123,7 @@ describe 'Event API' do
     expect(res['message']).to eql 'OK'
   end
 
-  it 'expect to post sending content-type missing' do
+  it 'fails to post with non json content-type' do
     content_type = 'application/x-www-form-urlencoded'
     res = post('/events',
       :headers => {
@@ -131,8 +131,8 @@ describe 'Event API' do
       },
       :body => {
         'message' => 'Alert!!!!'
-    }.to_json)
-
+      }.to_json)
+  
     expect(res['message']).to eql "Unsupported Content Type: #{content_type}"
   end
   before(:all) do

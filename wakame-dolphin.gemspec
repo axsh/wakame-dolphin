@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.test_files   = spec.files.grep(%r{^(tests|spec)/})
   spec.require_path = ['lib']
 
-  spec.add_runtime_dependency 'reel', '= 0.3.0'
+  spec.add_runtime_dependency 'reel-rack', '~> 0.1.0'
   spec.add_runtime_dependency 'actionmailer', '= 3.2.12'
   spec.add_runtime_dependency 'ltsv', '= 0.1.0'
   spec.add_runtime_dependency 'extlib', '~> 0.9.16'
@@ -34,9 +34,12 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'sinatra', '~> 1.4.0'
   spec.add_runtime_dependency 'sinatra-contrib', '~> 1.4.0'
 
-  # Fixed version for reel
-  spec.add_runtime_dependency 'celluloid', '= 0.12.4'
-  spec.add_runtime_dependency 'celluloid-io', '= 0.12.1'
-  spec.add_runtime_dependency 'nio4r', '= 0.4.3'
-  spec.add_runtime_dependency 'http', '= 0.4.0'
+  # stick gem versions for reel.
+  spec.add_runtime_dependency 'celluloid', '~> 0.15.0'
+  spec.add_runtime_dependency 'celluloid-io', '~> 0.15.0'
+  spec.add_runtime_dependency 'nio4r', '~> 0.5.0'
+  spec.add_runtime_dependency 'reel', '~> 0.4.0'
+  spec.add_runtime_dependency 'http', '~> 0.5.0'
+  spec.add_runtime_dependency 'http_parser.rb', '~> 0.6.0.beta.2'
+  spec.add_runtime_dependency 'websocket_parser', '~> 0.1.4'
 end
