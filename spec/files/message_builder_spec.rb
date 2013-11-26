@@ -50,5 +50,15 @@ describe Dolphin::TemplateBuilder do
       expect(notification_object.cc).to eq bind_params['cc']
       expect(notification_object.bcc).to eq bind_params['bcc']
     end
+
+    it 'expect to load external helper' do
+      expect(Dolphin.settings['template']).to be_true
+      expect(Dolphin.settings['template']['helper_module_path']).to be_true
+
+      tb = Dolphin::TemplateBuilder.new
+      template_str = 'hello <%= message(@foo) %>'
+      bind_params = {:foo => 'world'}
+      expect(tb.build(template_str, bind_params)).to eql 'hello world'
+    end
   end
 end
