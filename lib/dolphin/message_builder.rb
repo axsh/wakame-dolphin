@@ -98,15 +98,22 @@ module Dolphin
         end
 
         load_target_templates << template_path
-        load_target_templates.each {|path|
+        target_template = load_target_templates.each {|path|
           file_path = File.join(path, template_file(template_id))
           if File.exists? file_path
-            return File.read(file_path, :encoding => Encoding::UTF_8)
+            file = File.read(file_path, :encoding => Encoding::UTF_8)
+            break file if file
           else
-            logger :warn, "File not found #{file_path}"
-            return nil
+            nil
           end
         }
+
+        if target_template.nil?
+          logger :warn, "template file not found: #{template_file(template_id)}"
+          return nil
+        else
+          return target_template
+        end
       end
 
       def template_file(template_id)
