@@ -13,29 +13,9 @@ describe Dolphin::TemplateBuilder do
     end
 
     it "expect to nil template when broken helper" do
-      module Dolphin::Helpers::Message
-        module BrokenHelper
-          def broken_message(str)
-            str + nil
-          end
-        end
-      end
-
-      Dolphin::TemplateBuilder.module_eval do
-        include Dolphin::Helpers::Message::BrokenHelper
-      end
-
-      class TestMessageBuilderMail < Dolphin::MessageBuilder::Mail
-        private
-        def template(template_id)
-          header = "<%= @subject %>"
-          body = "<%= broken_message('crash') %>"
-          return [header,MESSAGE_BOUNDARY,body].join("\n")
-        end
-      end
-
-      mb = TestMessageBuilderMail.new
-      template = mb.build('broken_template', {
+      mb = Dolphin::MessageBuilder::Mail.new
+      message_type = 'broken_template'
+      template = mb.build(message_type, {
         'messages' => {
           'subject' => 'subject',
         }
