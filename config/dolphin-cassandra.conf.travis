@@ -9,11 +9,11 @@ worker = 1
 sender = 1
 
 [database]
-adapter = mysql
-host = 127.0.0.1
-port = 3306
-user = root
-pass =
+adapter = cassandra
+hosts = 127.0.0.1
+port = 9160
+max_retry_count = 3
+retry_interval = 3
 
 [mail]
 from = demo@example.com

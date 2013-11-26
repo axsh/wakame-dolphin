@@ -9,8 +9,8 @@ module Dolphin
     include Dolphin::Helpers::Message::ZabbixHelper
 
     # Load plugable helpers
-    if Dolphin.settings['template']
-      Dir.glob(File.join(Dolphin.settings['template']['helper_module_path'], '*_helper.rb')).each {|f|
+    if Dolphin.settings['template'] && Dolphin.settings['template'].has_key?('helper_module_path')
+      Dir.glob(File.join(File.expand_path(Dolphin.settings['template']['helper_module_path']), '*_helper.rb')).each {|f|
         require f
       }
     end
@@ -49,8 +49,10 @@ module Dolphin
         begin
           template = TemplateBuilder.new
           template.build(str, params).encode("UTF-8")
-        rescue SyntaxError => e
+        rescue => e
           logger :error, e
+          logger :error, e.backtrace
+          nil
         end
       end
     end
@@ -72,6 +74,7 @@ module Dolphin
         end
 
         message = build_message(body_template, params['messages'])
+        return nil  if message.nil?
         subject, body = message.split(MESSAGE_BOUNDARY)
         subject.strip! unless subject.nil?
         body.strip! unless body.nil?
@@ -90,20 +93,27 @@ module Dolphin
       def template(template_id)
         load_target_templates = []
 
-        if Dolphin.settings['template']
-          load_target_templates << File.join(Dolphin.settings['template']['template_path'], 'email')
+        if Dolphin.settings['template'] && Dolphin.settings['template'].has_key?('template_path')
+          load_target_templates << File.join(File.expand_path(Dolphin.settings['template']['template_path']), 'email')
         end
 
         load_target_templates << template_path
-        load_target_templates.each {|path|
+        target_template = load_target_templates.each {|path|
           file_path = File.join(path, template_file(template_id))
           if File.exists? file_path
-            return File.read(file_path, :encoding => Encoding::UTF_8)
+            file = File.read(file_path, :encoding => Encoding::UTF_8)
+            break file if file
           else
-            logger :warn, "File not found #{file_path}"
-            return nil
+            nil
           end
         }
+
+        if target_template.nil?
+          logger :warn, "template file not found: #{template_file(template_id)}"
+          return nil
+        else
+          return target_template
+        end
       end
 
       def template_file(template_id)
