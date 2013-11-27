@@ -102,7 +102,7 @@ module Dolphin
         target_template = load_target_templates.find{|path| File.exists? path }
 
         if target_template.nil?
-          logger :warn, "template file not found: #{template_file(template_id)}"
+          logger :error, "template file not found: #{template_file(template_id)}"
           return nil
         else
           return target_template
