@@ -60,6 +60,7 @@ module Dolphin
     use ValidateContentType, ['application/json', 'text/json'].freeze
 
     GET_EVENT_LIMIT = 3000.freeze
+    GET_HISTORY_LIMIT = 255.freeze
 
     before do
       logger :info, {
@@ -174,6 +175,38 @@ module Dolphin
       response_params = {
         :message => 'OK'
       }
+      respond_with response_params
+    end
+
+    get '/histories' do
+      required 'instance_id'
+      required 'item'
+
+      limit = @params['limit'].blank? ? GET_HISTORY_LIMIT : @params['limit'].to_i
+      raise "Requested over the limit. Limited to #{GET_HISTORY_LIMIT}" if limit > GET_HISTORY_LIMIT
+
+      supported_item_key = Constants::Item::ITEMS[@params['item']]
+      raise "Unsupported item: #{@params['item']}" if supported_item_key.blank?
+
+      history = {}
+      history[:id] = @params['instance_id']
+      history[:item] = supported_item_key
+      history[:limit] = limit
+      history[:start_time] = @params['start'] unless @params['start'].blank?
+      history[:end_time] = @params['end'] unless @params['end'].blank?
+
+      histories = worker.get_history(history)
+      raise history.message if histories.fail?
+
+      response_params = {
+        :results => {
+          :instance_id =>@params['instance_id'],
+          :item => @params['item'],
+          :metrics => histories.message
+        },
+        :message => 'OK'
+      }
+
       respond_with response_params
     end
 

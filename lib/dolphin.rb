@@ -96,6 +96,10 @@ module Dolphin
   autoload :Mailer, 'dolphin/mailer'
   autoload :DataStore, 'dolphin/data_store'
 
+  module Constants
+    autoload :Item, 'dolphin/constants/item'
+  end
+
   module Models
     autoload :Base, 'dolphin/models/base'
     module Cassandra
@@ -108,9 +112,15 @@ module Dolphin
       autoload :Base, 'dolphin/models/rdb/base'
       autoload :Event, 'dolphin/models/rdb/event'
       autoload :Notification, 'dolphin/models/rdb/notification'
+      autoload :Host, 'dolphin/models/rdb/host'
+      autoload :Item, 'dolphin/models/rdb/item'
+      autoload :History, 'dolphin/models/rdb/history'
       module Orm
         autoload :Event, 'dolphin/models/rdb/orm/event'
         autoload :Notification, 'dolphin/models/rdb/orm/notification'
+        autoload :Host, 'dolphin/models/rdb/orm/host'
+        autoload :Item, 'dolphin/models/rdb/orm/item'
+        autoload :History, 'dolphin/models/rdb/orm/history'
       end
     end
   end

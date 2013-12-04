@@ -12,7 +12,7 @@ module Dolphin
       Dolphin.settings['database']['hosts']
     end
 
-    def self.create(adapter)
+    def self.create(adapter, settings={})
       config = {}
       case adapter
         when :cassandra
@@ -28,11 +28,11 @@ module Dolphin
           klass = Dolphin::DataStore::Mysql
           config.merge!({
             :adapter => 'mysql2',
-            :database => DATABASE,
-            :host => Dolphin.settings['database']['host'],
-            :port => Dolphin.settings['database']['port'],
-            :user => Dolphin.settings['database']['user'],
-            :password => Dolphin.settings['database']['password'],
+            :database => settings[:database].blank? ? DATABASE : settings[:database],
+            :host => settings[:host].blank? ? Dolphin.settings['database']['host'] : settings[:host],
+            :port => settings[:port].blank? ? Dolphin.settings['database']['port'] : settings[:port],
+            :user => settings[:user].blank? ? Dolphin.settings['database']['user'] : settings[:user],
+            :password => settings[:password].blank? ? Dolphin.settings['database']['password'] : settings[:password],
           })
         else
           raise NotImplementedError

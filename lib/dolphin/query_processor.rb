@@ -34,10 +34,44 @@ module Dolphin
       send('delete_notification', notification_id)
     end
 
+    def get_host(id)
+      logger :info, "Get host #{id}"
+      send_zabbix('get_host', id)
+    end
+
+    def get_item(hostid, item)
+      logger :info, "Get item #{hostid} #{item}"
+      send_zabbix('get_item', hostid, item)
+    end
+
+    def get_history(params)
+      logger :info, "Get histories #{params}"
+      send_zabbix('get_history', params)
+    end
+
     private
     def send(action, *args)
       begin
         ds = DataStore.current_store
+        ds.connect
+        ds.__send__(action, *args)
+      rescue => e
+        logger :error, e.backtrace
+        logger :error, e
+        false
+      end
+    end
+
+    def send_zabbix(action, *args)
+      begin
+        ds = DataStore.create(:mysql, {
+            :database=> Dolphin.settings['zabbix']['database'],
+            :host=> Dolphin.settings['zabbix']['host'],
+            :port=> Dolphin.settings['zabbix']['port'],
+            :user=> Dolphin.settings['zabbix']['user'],
+            :password=> Dolphin.settings['zabbix']['password']
+          })
+
         ds.connect
         ds.__send__(action, *args)
       rescue => e

@@ -48,6 +48,21 @@ module Dolphin
         n.delete(notification)
       end
 
+      def get_host(id)
+        h = Dolphin::Models::Rdb::Host.new(ORM::Host)
+        h.get(id)
+      end
+
+      def get_item(hostid, item)
+        i = Dolphin::Models::Rdb::Item.new(ORM::Item)
+        i.get(hostid, item)
+      end
+
+      def get_history(params)
+        h = Dolphin::Models::Rdb::History.new(ORM::History)
+        h.get(params)
+      end
+
       def connect_path
         "#{@adapter}://#{@host}/#{@database}?user=#{@user}&password=#{@password}"
       end

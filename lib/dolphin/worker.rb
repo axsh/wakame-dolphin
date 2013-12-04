@@ -115,6 +115,24 @@ module Dolphin
       SuccessObject.new(notification)
     end
 
+    def get_history(params)
+      host = query_processor.get_host(params[:id])
+      if query_processor_failed?(host)
+        return FailureObject.new('Failed to get host')
+      end
+
+      item = query_processor.get_item(host[:hostid], params[:item])
+      if query_processor_failed?(item)
+        return FailureObject.new('Failed to get item')
+      end
+
+      history = query_processor.get_history(params.merge({:itemid=>item[:itemid]}))
+      if query_processor_failed?(history)
+        return FailureObject.new('Failed to get histories')
+      end
+      SuccessObject.new(history)
+    end
+
     private
     def query_processor_failed?(response_data)
       response_data === FALSE
