@@ -53,9 +53,9 @@ module Dolphin
         h.get(id)
       end
 
-      def get_item(hostid, item)
+      def get_item(hostid, item_key)
         i = Dolphin::Models::Rdb::Item.new(ORM::Item)
-        i.get(hostid, item)
+        i.get(hostid, item_key)
       end
 
       def get_history(params)

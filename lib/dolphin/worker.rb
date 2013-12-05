@@ -121,7 +121,7 @@ module Dolphin
         return FailureObject.new('Failed to get host')
       end
 
-      item = query_processor.get_item(host[:hostid], params[:item])
+      item = query_processor.get_item(host[:hostid], params[:item_key])
       if query_processor_failed?(item)
         return FailureObject.new('Failed to get item')
       end

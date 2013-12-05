@@ -39,9 +39,9 @@ module Dolphin
       send_zabbix('get_host', id)
     end
 
-    def get_item(hostid, item)
-      logger :info, "Get item #{hostid} #{item}"
-      send_zabbix('get_item', hostid, item)
+    def get_item(hostid, item_key)
+      logger :info, "Get item #{hostid} #{item_key}"
+      send_zabbix('get_item', hostid, item_key)
     end
 
     def get_history(params)

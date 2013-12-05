@@ -180,17 +180,17 @@ module Dolphin
 
     get '/histories' do
       required 'instance_id'
-      required 'item'
+      required 'title'
 
       limit = @params['limit'].blank? ? GET_HISTORY_LIMIT : @params['limit'].to_i
       raise "Requested over the limit. Limited to #{GET_HISTORY_LIMIT}" if limit > GET_HISTORY_LIMIT
 
-      supported_item_key = Constants::Item::ITEMS[@params['item']]
-      raise "Unsupported item: #{@params['item']}" if supported_item_key.blank?
+      supported_item_key = Constants::Item::ITEMS[@params['title']]
+      raise "Unsupported title: #{@params['title']}" if supported_item_key.blank?
 
       history = {}
       history[:id] = @params['instance_id']
-      history[:item] = supported_item_key
+      history[:item_key] = supported_item_key
       history[:limit] = limit
       history[:start_time] = @params['start'] unless @params['start'].blank?
       history[:end_time] = @params['end'] unless @params['end'].blank?
@@ -201,7 +201,7 @@ module Dolphin
       response_params = {
         :results => {
           :instance_id =>@params['instance_id'],
-          :item => @params['item'],
+          :title => @params['title'],
           :metrics => histories.message
         },
         :message => 'OK'

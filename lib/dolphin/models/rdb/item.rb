@@ -3,8 +3,8 @@
 module Dolphin::Models
   module Rdb
     class Item < Base
-      def get(hostid, item)
-        res = db.find(:hostid=>hostid, :key_=>item)
+      def get(hostid, item_key)
+        res = db.find(:hostid=>hostid, :key_=>item_key)
         res.values
       end
     end
