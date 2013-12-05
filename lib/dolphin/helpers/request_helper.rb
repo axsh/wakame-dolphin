@@ -10,6 +10,10 @@ module Dolphin
         case name
           when 'notification_id'
             raise 'Not found X-Notification-Id' if @notification_id.nil?
+          when 'instance_id'
+            raise 'Not found instance_id' if @params['instance_id'].nil?
+          when 'title'
+            raise 'Not found title' if @params['title'].nil?
         end
       end
 
