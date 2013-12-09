@@ -132,7 +132,7 @@ describe 'Event API' do
       :body => {
         'message' => 'Alert!!!!'
       }.to_json)
-  
+
     expect(res['message']).to eql "Unsupported Content Type: #{content_type}"
   end
   before(:all) do
