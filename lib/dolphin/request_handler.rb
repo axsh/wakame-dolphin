@@ -73,8 +73,10 @@ module Dolphin
         v = request.body
         begin
           @params = MultiJson.load(v)
+          @params = {} if @params.blank?
         rescue => e
-          raise e.message.split(':')[1].strip!
+          logger :warn, e.message.split(':')[1].strip!
+          raise 'Invalid request parameters'
         end
       elsif request.get?
         @params = request.params

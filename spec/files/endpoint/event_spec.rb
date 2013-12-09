@@ -138,4 +138,21 @@ describe 'Event API' do
   before(:all) do
     FileUtils.rm(@temporary_mail) if File.exists?(@temporary_mail)
   end
+
+  it 'expect to fail to post invalid JSON in the POST body' do
+    params = {:headers => {'Content-Type' =>'application/json'}}
+    error_message = {"message" => 'Nothing parameters.'}
+
+    evaluate = lambda {|body|
+      begin
+        res = post('/events', params.merge({:body => body.to_json}) )
+      ensure
+        return res
+      end
+    }
+
+    expect(evaluate.call('')).to eql error_message
+    expect(evaluate.call([])).to eql error_message
+    expect(evaluate.call(nil)).to eql error_message
+  end
 end
