@@ -40,11 +40,17 @@ module Dolphin
 
   Celluloid.logger.datetime_format = "%Y-%m-%d %H:%M:%S"
   Celluloid.logger.formatter = proc { |severity, datetime, progname, msg|
-    case settings['logger']['format']
+    format = 'human_readable'
+    if settings['logger'] && settings['logger'].has_key?('format')
+      format = settings['logger']['format']
+    end
+
+    case format
       when 'human_readable'
         msg = "[#{msg[:thread_id]}] [#{msg[:classname]}] #{msg[:message]}" if msg.is_a?(Hash)
         Logger::Formatter.new.call(severity, datetime, progname, msg)
       when 'ltsv'
+        msg = {:thread_id => '', :classname => '', :message => msg} unless msg.is_a?(Hash)
         LTSV.dump({
           :log_level => severity,
           :time => datetime,
@@ -52,6 +58,8 @@ module Dolphin
           :classname => msg[:classname],
           :message => msg[:message],
         }) + "\n"
+      else
+        raise "Doesn't support format: #{format}"
     end
   }
 
