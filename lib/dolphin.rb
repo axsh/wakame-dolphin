@@ -9,7 +9,7 @@ $LOAD_PATH.unshift File.expand_path('../', __FILE__)
 module Dolphin
   def self.load_setting(path=nil)
     path ||= ENV['CONFIG_FILE'] || File.join(Dolphin.config_path, 'dolphin.conf')
-    
+
     if !File.exists?(path)
       STDERR.puts "Not found configuration file: #{path}"
       exit!
@@ -18,7 +18,7 @@ module Dolphin
     @config = path
     @settings = ParseConfig.new(path)
   end
-  
+
   def self.settings
     raise "Configuration file is not loaded yet." if @settings.nil?
     @settings
