@@ -38,7 +38,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'celluloid', '~> 0.15.0'
   spec.add_runtime_dependency 'celluloid-io', '~> 0.15.0'
   spec.add_runtime_dependency 'nio4r', '~> 0.5.0'
-  spec.add_runtime_dependency 'reel', '~> 0.4.0'
+  spec.add_runtime_dependency 'reel'
   spec.add_runtime_dependency 'http', '~> 0.5.0'
   spec.add_runtime_dependency 'http_parser.rb', '~> 0.6.0.beta.2'
   spec.add_runtime_dependency 'websocket_parser', '~> 0.1.4'

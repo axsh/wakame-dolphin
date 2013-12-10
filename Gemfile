@@ -17,4 +17,5 @@ group :development, :test do
   gem 'rb-readline'
 end
 
+gem 'reel', :git => 'https://github.com/celluloid/reel.git', :ref => '6952a824fe1ce206ce74d242327adf1bc7ce5cf3'
 gem 'reel-rack', :git => 'https://github.com/axsh/reel-rack.git', :branch => 'fix-request-header'
