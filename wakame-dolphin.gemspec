@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.test_files   = spec.files.grep(%r{^(tests|spec)/})
   spec.require_path = ['lib']
 
-  spec.add_runtime_dependency 'reel-rack', '~> 0.1.0'
+  spec.add_runtime_dependency 'reel-rack'
   spec.add_runtime_dependency 'actionmailer', '= 3.2.12'
   spec.add_runtime_dependency 'ltsv', '= 0.1.0'
   spec.add_runtime_dependency 'extlib', '~> 0.9.16'

@@ -16,3 +16,5 @@ group :development, :test do
   gem 'pry'
   gem 'rb-readline'
 end
+
+gem 'reel-rack', :git => 'https://github.com/axsh/reel-rack.git', :branch => 'fix-request-header'
