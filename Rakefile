@@ -14,7 +14,6 @@ RSpec::Core::RakeTask.new("spec") do |spec|
   spec.pattern = FileList["spec/files/endpoint/*_spec.rb",
                           "spec/files/message_builder_spec.rb",
                           "spec/files/datastore_spec.rb",
-                          "spec/files/dolphin_spec.rb",
                          ]
 
   if Dolphin.settings['database']['adapter'] == 'cassandra'
