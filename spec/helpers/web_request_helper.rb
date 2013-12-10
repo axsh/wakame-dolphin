@@ -39,7 +39,7 @@ module WebRequestHelper
         JSON.parse(response.body)
       end
     rescue => e
-      pending e.message
+      puts e
     end
   end
 end

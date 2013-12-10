@@ -23,4 +23,27 @@ module TestHelper
     port = Dolphin.settings["server"]["port"]
     `ss -n | egrep #{port} | grep CLOSE-WAIT | wc -l`.strip.to_i
   end
+
+  def run_server(options={})
+    ## run command
+    bundle = File.join(Dolphin.root_path, 'ruby/bin/bundle')
+    dolphin = File.join(Dolphin.root_path, 'bin/dolphin_server')
+    command =  "#{bundle} exec #{dolphin} -c #{options[:config_file]}"
+    Process.spawn(command)
+  end
+
+  def test_runonce(options, &block)
+    begin
+      pid = run_server(options)
+      # TODO: Fix waiting server
+      sleep 5
+
+      block.call
+    rescue => e
+      puts e
+    ensure
+      Process.kill("KILL", pid)
+      puts "Process killed #{pid}"
+    end
+  end
 end
