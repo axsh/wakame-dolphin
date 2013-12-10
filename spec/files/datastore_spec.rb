@@ -5,17 +5,20 @@ require 'spec_helper'
 describe Dolphin::DataStore do
 
   before(:all) do
-    @adapter = Dolphin.settings['database']['adapter']
+    @settings = Marshal.load(Marshal.dump(Dolphin.settings))
   end
 
   it 'expect to select mysql adapter' do
     Dolphin.settings['database']['adapter'] = 'mysql'
+    Dolphin.settings['database']['host'] = '127.0.0.1'
+    Dolphin.settings['database']['port'] = '3306'
     store = Dolphin::DataStore.current_store
     expect(store).to be_a(Dolphin::DataStore::Mysql)
   end
 
   it 'expect to select cassandra adapter' do
     Dolphin.settings['database']['adapter'] = 'cassandra'
+    Dolphin.settings['database']['hosts'] = '127.0.0.1'
     store = Dolphin::DataStore.current_store
     expect(store).to be_a(Dolphin::DataStore::Cassandra)
   end
@@ -34,7 +37,6 @@ describe Dolphin::DataStore do
   end
 
   after(:all) do
-    Dolphin.settings['database']['adapter'] = @adapter
+    Dolphin.settings.params = @settings.params
   end
-
 end
