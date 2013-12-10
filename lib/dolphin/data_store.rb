@@ -5,11 +5,11 @@ module Dolphin
     DATABASE = 'dolphin'.freeze
 
     def self.current_store
-      create(Dolphin.settings['database']['adapter'].to_sym)
-    end
-
-    def hosts
-      Dolphin.settings['database']['hosts']
+      if Dolphin.settings['database'] && !Dolphin.settings['database']['adapter'].blank?
+        create(Dolphin.settings['database']['adapter'].to_sym)
+      else
+        raise 'Unknown database'
+      end
     end
 
     def self.create(adapter)
