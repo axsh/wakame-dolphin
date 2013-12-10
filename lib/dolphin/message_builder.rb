@@ -105,7 +105,8 @@ module Dolphin
           logger :error, "template file not found: #{template_file(template_id)}"
           return nil
         else
-          return target_template
+          template_file = File.read(target_template)
+          return template_file
         end
       end
 
