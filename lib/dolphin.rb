@@ -125,6 +125,7 @@ module Dolphin
   module DataStore
     autoload :Cassandra, 'dolphin/data_stores/cassandra'
     autoload :Mysql, 'dolphin/data_stores/mysql'
+    autoload :Mock, 'dolphin/data_stores/mock'
     autoload :BaseRdb, 'dolphin/data_stores/base_rdb'
   end
 

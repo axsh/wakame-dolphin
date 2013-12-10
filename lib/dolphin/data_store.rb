@@ -34,6 +34,8 @@ module Dolphin
             :user => Dolphin.settings['database']['user'],
             :password => Dolphin.settings['database']['password'],
           })
+        when :mock
+          klass = Dolphin::DataStore::Mock
         else
           raise NotImplementedError
       end
