@@ -30,6 +30,7 @@ describe 'Notification API' do
     res = json_body(response.body)
     expect(res['results']).to eql @notification_values
     expect(res['message']).to eql 'OK'
+    expect(response.code).to eql '200'
   end
 
   it 'expect to post notification' do
@@ -42,6 +43,7 @@ describe 'Notification API' do
     )
     res = json_body(response.body)
     expect(res['message']).to eql 'OK'
+    expect(response.code).to eql '200'
   end
 
   it 'expect to delete notification' do
@@ -51,6 +53,7 @@ describe 'Notification API' do
     })
     res = json_body(response.body)
     expect(res['message']).to eql 'OK'
+    expect(response.code).to eql '200'
   end
 
 end

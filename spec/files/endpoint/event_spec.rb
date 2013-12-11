@@ -48,6 +48,7 @@ describe 'Event API' do
     })
     res = json_body(response.body)
     expect(res['message']).to eql 'OK'
+    expect(response.code).to eql '200'
   end
 
   it 'expect to get last event' do
@@ -68,6 +69,7 @@ describe 'Event API' do
     })
     res = json_body(response.body)['results'][0]
     expect(res['id']).to eql last_event_id
+    expect(response.code).to eql '200'
   end
 
   it 'expect to post event and send email' do
@@ -87,6 +89,7 @@ describe 'Event API' do
     res = json_body(response.body)
 
     expect(res['message']).to eql 'OK'
+    expect(response.code).to eql '200'
 
     wait_for_sending_mail_to_be_ready {
       break if File.exists?(@temporary_mail)
@@ -125,6 +128,7 @@ describe 'Event API' do
     }.to_json)
     res = json_body(response.body)
     expect(res['message']).to eql 'OK'
+    expect(response.code).to eql '200'
   end
 
   it 'fails to post with non json content-type' do
@@ -138,6 +142,7 @@ describe 'Event API' do
       }.to_json)
     res = json_body(response.body)
     expect(res['message']).to eql "Unsupported Content Type: #{content_type}"
+    expect(response.code).to eql '415'
   end
   before(:all) do
     FileUtils.rm(@temporary_mail) if File.exists?(@temporary_mail)

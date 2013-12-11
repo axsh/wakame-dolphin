@@ -39,12 +39,14 @@ describe 'Test Reel version 0.0.3 bug' do
 
   it 'expect to not remain close socket use Net::HTTP' do
     test_runonce(@server_options) {
-      res = get('/notifications', :headers => {
+      response = get('/notifications', :headers => {
         'Content-Type' =>'application/json',
         'X-Notification-Id' => @notification_id,
       })
+      res = json_body(response.body)
       expect(res['message']).to eql 'OK'
       expect(close_wait_socket_count).to eql 0
+      expect(response.code).to eql '200'
     }
   end
 
