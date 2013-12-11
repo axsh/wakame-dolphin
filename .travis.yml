@@ -22,9 +22,12 @@ before_script:
   - mysql -e 'create database dolphin;'
   - bundle exec rake db:mysql:init
   - bundle exec ./bin/dolphin_server &
-  - '/etc/init.d/cassandra status'
-  - /usr/bin/cassandra-cli -h 127.0.0.1 -k ./config/db/cassandra_schema.txt
+  - sudo sh -c "echo 'JVM_OPTS=\"\${JVM_OPTS} -Djava.net.preferIPv4Stack=false\"' >> /usr/local/cassandra/conf/cassandra-env.sh"
+  - echo "127.0.0.1 " `hostname` | sudo tee /etc/hosts
+  - sudo service cassandra start
   - sleep 5
+  - /usr/bin/cassandra-cli -h 127.0.0.1 -k ./config/db/cassandra_schema.txt
+  - sleep 3
 
 script:
   - bundle exec rake spec
