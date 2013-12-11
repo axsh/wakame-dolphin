@@ -18,6 +18,7 @@ before_install:
   - gem update bundler
 
 before_script:
+  - sleep 10
   - bundle exec ./bin/dolphin_server &
 
 script:
