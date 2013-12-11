@@ -9,7 +9,7 @@ module Dolphin
     trap_exit :actor_died
 
     def actor_died(actor, reason)
-      logger :info, "Actor died"
+      logger :error, "Actor died"
       restart_actor(actor, "Breaked actor")
       logger :info, "Actor restarted"
     end
