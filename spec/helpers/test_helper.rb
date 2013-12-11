@@ -26,9 +26,8 @@ module TestHelper
 
   def run_server(options={})
     ## run command
-    bundle = File.join(Dolphin.root_path, 'ruby/bin/bundle')
     dolphin = File.join(Dolphin.root_path, 'bin/dolphin_server')
-    command =  "#{bundle} exec #{dolphin} -c #{options[:config_file]}"
+    command =  "bundle exec #{dolphin} -c #{options[:config_file]}"
     Process.spawn(command)
   end
 
