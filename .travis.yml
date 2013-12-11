@@ -1,7 +1,6 @@
 language: ruby
 
 env:
-  - DB=mysql CONFIG_FILE=./config/dolphin-mysql.conf.travis
   - DB=cassandra CONFIG_FILE=./config/dolphin-cassandra.conf.travis
 
 rvm:
@@ -19,24 +18,16 @@ before_install:
   - gem update bundler
 
 before_script:
-  - mysql -e 'create database dolphin;'
-  - bundle exec rake db:mysql:init
-  - bundle exec ./bin/dolphin_server &
   - sudo sh -c "echo 'JVM_OPTS=\"\${JVM_OPTS} -Djava.net.preferIPv4Stack=false\"' >> /usr/local/cassandra/conf/cassandra-env.sh"
   - echo "127.0.0.1 " `hostname` | sudo tee /etc/hosts
   - sudo service cassandra start
-  - sleep 5
-  - /usr/bin/cassandra-cli -h 127.0.0.1 -k ./config/db/cassandra_schema.txt
-  - sleep 3
+  - bundle exec ./bin/dolphin_server &
 
 script:
   - bundle exec rake spec
 
 after_script:
-  - bundle exec rake db:mysql:drop
 
 branches:
   only:
-    - master
-    - fix-0.0.5
     - travis-ci-cassandra
