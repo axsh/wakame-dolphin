@@ -32,3 +32,4 @@ branches:
   only:
     - master
     - fix-0.0.5
+    - travis-ci-cassandra
