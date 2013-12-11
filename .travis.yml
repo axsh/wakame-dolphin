@@ -7,6 +7,9 @@ rvm:
   - 2.0.0
   - ruby-head
 
+services:
+  - cassandra
+
 matrix:
   allow_failures:
     - rvm: ruby-head
