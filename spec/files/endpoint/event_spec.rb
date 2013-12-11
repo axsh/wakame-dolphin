@@ -43,17 +43,19 @@ describe 'Event API' do
   end
 
   it 'expect to get events' do
-    res = get("/events?limit=#{GET_EVENT_LIMIT}", :headers => {
+    response = get("/events?limit=#{GET_EVENT_LIMIT}", :headers => {
       'Content-Type' =>'application/json',
     })
+    res = json_body(response.body)
     expect(res['message']).to eql 'OK'
   end
 
   it 'expect to get last event' do
-    events = get("/events?limit=#{GET_EVENT_LIMIT}", :headers => {
+    response = get("/events?limit=#{GET_EVENT_LIMIT}", :headers => {
       'Content-Type' =>'application/json',
     })
-    last_event = events['results'][-1]
+    res = json_body(response.body)
+    last_event = res['results'][-1]
     last_event_id = last_event['id']
 
     query_string = '?' + [
@@ -61,16 +63,17 @@ describe 'Event API' do
       "start_id=#{SimpleUUID::UUID.new(last_event_id).to_guid}"
     ].join('&')
 
-    res = get('/events' + query_string, :headers => {
+    response = get('/events' + query_string, :headers => {
       'Content-Type' =>'application/json',
-    })['results'][0]
+    })
+    res = json_body(response.body)['results'][0]
     expect(res['id']).to eql last_event_id
   end
 
   it 'expect to post event and send email' do
     message_subject = 'subject'
     message_body = 'body'
-    res = post('/events',
+    response = post('/events',
       :headers => {
         'Content-Type' =>'application/json',
         'X-Notification-Id' => @notification_id,
@@ -81,6 +84,7 @@ describe 'Event API' do
         'body' => message_body,
         'message' => 'Alert!!!!'
     }.to_json)
+    res = json_body(response.body)
 
     expect(res['message']).to eql 'OK'
 
@@ -112,27 +116,27 @@ describe 'Event API' do
   end
 
   it 'expect to post event only' do
-    res = post('/events',
+    response = post('/events',
       :headers => {
         'Content-Type' =>'application/json',
       },
       :body => {
         'message' => 'Alert!!!!'
     }.to_json)
-
+    res = json_body(response.body)
     expect(res['message']).to eql 'OK'
   end
 
   it 'fails to post with non json content-type' do
     content_type = 'application/x-www-form-urlencoded'
-    res = post('/events',
+    response = post('/events',
       :headers => {
         'Content-Type' => content_type,
       },
       :body => {
         'message' => 'Alert!!!!'
       }.to_json)
-
+    res = json_body(response.body)
     expect(res['message']).to eql "Unsupported Content Type: #{content_type}"
   end
   before(:all) do
@@ -145,8 +149,9 @@ describe 'Event API' do
 
     evaluate = lambda {|body|
       begin
-        res = post('/events', params.merge({:body => body.to_json}) )
+        response = post('/events', params.merge({:body => body.to_json}) )
       ensure
+        res = json_body(response.body)
         return res
       end
     }

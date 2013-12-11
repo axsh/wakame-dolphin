@@ -36,10 +36,13 @@ module WebRequestHelper
       # http.set_debug_output $stderr
       http.start do |h|
         response = h.request(net)
-        JSON.parse(response.body)
       end
     rescue => e
       puts e
     end
+  end
+
+  def json_body(body)
+    JSON.parse(body)
   end
 end

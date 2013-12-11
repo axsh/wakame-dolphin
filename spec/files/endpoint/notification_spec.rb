@@ -23,31 +23,33 @@ describe 'Notification API' do
   end
 
   it 'expect to get notifications' do
-    res = get('/notifications', :headers => {
+    response = get('/notifications', :headers => {
       'Content-Type' =>'application/json',
       'X-Notification-Id' => @notification_id,
     })
-
+    res = json_body(response.body)
     expect(res['results']).to eql @notification_values
     expect(res['message']).to eql 'OK'
   end
 
   it 'expect to post notification' do
-    res = post('/notifications',
+    response = post('/notifications',
       :headers => {
         'Content-Type' =>'application/json',
         'X-Notification-Id' => @notification_id
       },
       :body => @notification_values.to_json
     )
+    res = json_body(response.body)
     expect(res['message']).to eql 'OK'
   end
 
   it 'expect to delete notification' do
-    res = delete('/notifications', :headers => {
+    response = delete('/notifications', :headers => {
       'Content-Type' =>'application/json',
       'X-Notification-Id' => @notification_id,
     })
+    res = json_body(response.body)
     expect(res['message']).to eql 'OK'
   end
 
