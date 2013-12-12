@@ -9,7 +9,7 @@ module Dolphin
       def required(name)
         case name
           when 'notification_id'
-            raise 'Not found X-Notification-Id' if @notification_id.nil?
+            raise Dolphin::RequestApp::ClientError, 'Not found X-Notification-Id' if @notification_id.blank?
         end
       end
 
