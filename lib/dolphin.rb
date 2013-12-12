@@ -92,7 +92,7 @@ module Dolphin
 
   autoload :Util, 'dolphin/util'
   autoload :MessageBuilder, 'dolphin/message_builder'
-  autoload :TemplateBuilder, 'dolphin/message_builder'
+  autoload :TemplateBuilder, 'dolphin/template_builder'
   autoload :Mailer, 'dolphin/mailer'
   autoload :DataStore, 'dolphin/data_store'
 
