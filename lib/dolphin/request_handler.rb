@@ -112,11 +112,16 @@ module Dolphin
   end
 
   class RequestApp < Sinatra::Base
+    class ClientError < RuntimeError; end
+    class ServerError < RuntimeError; end
+    class NotFound < RuntimeError; end
+
     use Dolphin::RequestHandler::CommonLogger
     helpers Dolphin::Helpers::RequestHelper
     register Sinatra::RespondWith
     respond_to :json
     set :show_exceptions, false
+
 
     # Rack middleware that rejects the request with unsupported content type.
     # Returns 415 (Unsupported Media Type) for the unsupported request.
@@ -158,32 +163,62 @@ module Dolphin
           @params = MultiJson.load(v)
           @params = {} if @params.blank?
         rescue => e
-          raise 'Invalid request parameters'
+          raise ClientError, 'Invalid request parameters'
         end
       elsif request.get?
         @params = request.params
       end
     end
 
-    error(RuntimeError) do |e|
+    error(ClientError) do |e|
       status(400)
       response_params =  {
         :message => e.message
       }
-      respond_with response_params
+      response_error(response_params)
+    end
+
+    error(NotFound) do |e|
+      status(404)
+      response_params =  {
+        :message => e.message
+      }
+      response_error(response_params)
+    end
+
+    error(ServerError) do |e|
+      status(500)
+      response_params =  {
+        :message => e.message
+      }
+      response_error(response_params)
+    end
+
+    error do |e|
+      response_params =  {
+        :message => e.message
+      }
+      response_error(response_params)
+    end
+
+    not_found do |e|
+      response_params =  {
+        :message => 'Not found'
+      }
+      response_error(response_params)
     end
 
     post '/events' do
-      raise 'Nothing parameters.' if @params.blank?
+      raise ClientError, 'Nothing parameters.' if @params.blank?
 
       event = {}
       event[:notification_id] = @notification_id
       event[:message_type] = @message_type
       event[:messages] = @params
 
-      events = worker.future.put_event(event)
+      events = worker.put_event(event)
+      raise ServerError, events.message if events.fail?
 
-      # always success because put_event is async action.
       response_params = {
         :message => 'OK'
       }
@@ -192,7 +227,7 @@ module Dolphin
 
     get '/events' do
       limit = @params['limit'].blank? ? GET_EVENT_LIMIT : @params['limit'].to_i
-      raise "Requested over the limit. Limited to #{GET_EVENT_LIMIT}" if limit > GET_EVENT_LIMIT
+      raise ClientError, "Requested over the limit. Limited to #{GET_EVENT_LIMIT}" if limit > GET_EVENT_LIMIT
 
       event = {}
       event[:count] = limit
@@ -200,7 +235,7 @@ module Dolphin
       event[:start_id] = @params['start_id'] unless @params['start_id'].blank?
 
       events = worker.get_event(event)
-      raise events.message if events.fail?
+      raise ServerError, events.message if events.fail?
 
       response_params = {
         :results => events.message,
@@ -217,8 +252,8 @@ module Dolphin
       notification[:id] = @notification_id
 
       result = worker.get_notification(notification)
-      raise result.message if result.fail?
-      raise "Not found notification id" if result.message.nil?
+      raise ServerError, result.message if result.fail?
+      raise NotFound, "Not found notification id" if result.message.nil?
 
       response_params = {
         :results => result.message,
@@ -229,16 +264,16 @@ module Dolphin
 
     post '/notifications' do
       required 'notification_id'
-      raise 'Nothing parameters.' if @params.blank?
+      raise ClientError,'Nothing parameters.' if @params.blank?
 
       unsupported_sender_types = @params.keys - Sender::TYPES
-      raise "Unsuppoted sender types: #{unsupported_sender_types.join(',')}" unless unsupported_sender_types.blank?
+      raise ClientError,"Unsuppoted sender types: #{unsupported_sender_types.join(',')}" unless unsupported_sender_types.blank?
 
       notification = {}
       notification[:id] = @notification_id
       notification[:methods] = @params
       result = worker.put_notification(notification)
-      raise result.message if result.fail?
+      raise ServerError, result.message if result.fail?
 
       response_params = {
         :message => 'OK'
@@ -253,7 +288,7 @@ module Dolphin
       notification[:id] = @notification_id
 
       result = worker.delete_notification(notification)
-      raise result.message if result.fail?
+      raise ServerError, result.message if result.fail?
 
       response_params = {
         :message => 'OK'
@@ -264,6 +299,10 @@ module Dolphin
     private
     def worker
       Celluloid::Actor[:workers]
+    end
+
+    def response_error(response_params)
+      respond_with response_params
     end
   end
 end
