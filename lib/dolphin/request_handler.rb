@@ -14,7 +14,6 @@ module Rack
 end
 
 module Dolphin
-  #class RequestHandler < Rack::Handler::Reel
   class RequestHandler < Reel::Rack::Server
     include Dolphin::Util
 
