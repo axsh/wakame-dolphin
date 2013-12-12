@@ -56,4 +56,33 @@ describe 'Notification API' do
     expect(response.code).to eql '200'
   end
 
+  it 'expect not found X-Notification-Id in header' do
+    error_message = 'Not found X-Notification-Id'
+    response = get('/notifications', :headers => {
+      'Content-Type' =>'application/json',
+    })
+    res = json_body(response.body)
+    expect(res['message']).to eql error_message
+    expect(response.code).to eql '400'
+
+    response = get('/notifications', :headers => {
+      'Content-Type' =>'application/json',
+      'X-Notification-Id' => ''
+    })
+    res = json_body(response.body)
+    expect(res['message']).to eql error_message
+    expect(response.code).to eql '400'
+  end
+
+  it 'expect not found notification id in database' do
+    error_message = 'Not found notification id'
+    response = get('/notifications', :headers => {
+      'Content-Type' =>'application/json',
+      'X-Notification-Id' => '999'
+    })
+    res = json_body(response.body)
+    expect(res['message']).to eql error_message
+    expect(response.code).to eql '404'
+  end
+
 end

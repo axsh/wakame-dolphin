@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 require 'spec_helper'
+require 'dolphin/request_handler'
 
 describe 'Event API' do
 
@@ -56,6 +57,9 @@ describe 'Event API' do
       'Content-Type' =>'application/json',
     })
     res = json_body(response.body)
+    expect(res['message']).to eql 'OK'
+    expect(response.code).to eql '200'
+
     last_event = res['results'][-1]
     last_event_id = last_event['id']
 
@@ -156,6 +160,7 @@ describe 'Event API' do
       begin
         response = post('/events', params.merge({:body => body.to_json}) )
       ensure
+        expect(response.code).to eql '400'
         res = json_body(response.body)
         return res
       end
@@ -165,4 +170,30 @@ describe 'Event API' do
     expect(evaluate.call([])).to eql error_message
     expect(evaluate.call(nil)).to eql error_message
   end
+
+  it 'expect to fail when over the limit' do
+    error_message = "Requested over the limit. Limited to #{Dolphin::RequestApp::GET_EVENT_LIMIT}"
+
+    response = get("/events?limit=3001", :headers => {
+      'Content-Type' =>'application/json',
+    })
+    res = json_body(response.body)
+    expect(res['message']).to eql error_message
+    expect(response.code).to eql '400'
+  end
+
+  it 'expect to fail if body is empty' do
+    error_message = "Nothing parameters."
+    response = post('/events',
+      :headers => {
+        'Content-Type' => 'application/json',
+      },
+      :body => ''
+    )
+
+    res = json_body(response.body)
+    expect(res['message']).to eql error_message
+    expect(response.code).to eql '400'
+  end
+
 end
