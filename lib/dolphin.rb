@@ -134,6 +134,7 @@ module Dolphin
 
   # Celluloid actors
   autoload :RequestHandler, 'dolphin/request_handler'
+  autoload :RequestApp, 'dolphin/request_app'
   autoload :Worker, 'dolphin/worker'
   autoload :QueryProcessor, 'dolphin/query_processor'
   autoload :Sender, 'dolphin/sender'
