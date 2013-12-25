@@ -117,7 +117,7 @@ module Dolphin
 
     private
     def query_processor_failed?(response_data)
-      response_data === FALSE
+      response_data === false
     end
 
     def query_processor
