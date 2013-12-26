@@ -72,6 +72,22 @@ describe 'Test Dolphin::Models for Cassandra' do
         })[0]
         expect(event_id).to eql event_data['id']
       end
+
+      it 'expect to put with multibyte data' do
+        event_value = {
+          :messages => {
+            'message' => 'アラート'
+          }
+        }
+
+        event_id = @connection.put_event(event_value)
+        expect(SimpleUUID::UUID.new(event_id)).to be_a SimpleUUID::UUID
+        event_data = @connection.get_event({
+          :count => 1,
+          :start_id => SimpleUUID::UUID.new(event_id)
+        })[0]
+        expect(event_id).to eql event_data['id']
+      end
     end
   end
 
