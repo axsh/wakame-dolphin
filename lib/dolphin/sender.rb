@@ -39,6 +39,7 @@ module Dolphin
           logger :info, "Success Sent message"
         rescue => e
           logger :error, e.message
+          false
         end
 
       end

@@ -46,8 +46,7 @@ module Dolphin
         unless Sender::TYPES.include? sender_type
           log_message = "Not found sender #{sender_type}"
           logger :error, log_message
-          # Does not do response to Request Handler.
-          next
+          return NotFoundObject.new(log_message)
         end
 
         build_params = {}
@@ -64,20 +63,17 @@ module Dolphin
         if message.nil?
           log_message = "Failed to build message: #{build_params}"
           logger :error, log_message
-          # Does not do response to Request Handler.
-          next
+          return FailureObject.new(log_message)
         else
           message.event_id = event_id
         end
 
         logger :info, "Send notification from Worker #{message}"
 
-        begin
-          send_notification(sender_type, message)
-        rescue => e
-          logger :error, e
-          # Does not do response to Request Handler.
-          next
+        res = send_notification(sender_type, message)
+        if send_notification_failed?(res)
+          log_message = "Failed to send #{sender_type}"
+          return FailureObject.new(log_message)
         end
       end
 
@@ -119,6 +115,10 @@ module Dolphin
 
     private
     def query_processor_failed?(response_data)
+      response_data === false
+    end
+
+    def send_notification_failed?(response_data)
       response_data === false
     end
 
