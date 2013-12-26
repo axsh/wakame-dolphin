@@ -50,6 +50,7 @@ module Dolphin
     attr_accessor :message
     def initialize
       @success = nil
+      @not_found = nil
       @message = ''
     end
 
@@ -70,6 +71,14 @@ module Dolphin
       warn 'Does not happened anything.' if @success.nil?
       @success === false
     end
+
+    def not_found!
+      @not_found = true
+    end
+
+    def not_found?
+      @not_found === true
+    end
   end
 
   class FailureObject < ResponseObject
@@ -83,6 +92,14 @@ module Dolphin
   class SuccessObject < ResponseObject
     def initialize(message = '')
       success!
+      @message = message
+      freeze
+    end
+  end
+
+  class NotFoundObject < ResponseObject
+    def initialize(message = '')
+      not_found!
       @message = message
       freeze
     end

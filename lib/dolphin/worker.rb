@@ -28,11 +28,9 @@ module Dolphin
 
       # synchronized
       notifications = future_notification.value
-
       if notifications.nil?
         log_message = "Not found notification: #{event_object[:notification_id]}"
-        logger :error, log_message
-        return FailureObject.new(log_message)
+        return NotFoundObject.new(log_message)
       end
 
       if query_processor_failed?(notifications)

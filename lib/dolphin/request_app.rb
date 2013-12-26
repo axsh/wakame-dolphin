@@ -111,6 +111,7 @@ module Dolphin
 
       events = worker.put_event(event)
       raise ServerError, events.message if events.fail?
+      raise ClientError, events.message if events.not_found?
 
       response_params = {
         :message => 'OK'
