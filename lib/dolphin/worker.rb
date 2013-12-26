@@ -14,6 +14,10 @@ module Dolphin
       message_template_id = event_object[:message_type]
 
       future_event = query_processor.future.put_event(event_object)
+      event_id = future_event.value
+      if query_processor_failed?(event_id)
+        return FailureObject.new('Failed to put event')
+      end
 
       # if notification_id not exists, doesn't send notification.
       if notification_id.blank?
@@ -24,7 +28,7 @@ module Dolphin
 
       # synchronized
       notifications = future_notification.value
-      event_id = future_event.value
+
       if notifications.nil?
         log_message = "Not found notification: #{event_object[:notification_id]}"
         logger :error, log_message
