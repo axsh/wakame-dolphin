@@ -8,7 +8,7 @@ group :mysql do
 end
 
 group :cassandra do
-  gem 'cassandra', '0.17.0'
+  gem 'cassandra', '0.23.0'
 end
 
 group :development, :test do
