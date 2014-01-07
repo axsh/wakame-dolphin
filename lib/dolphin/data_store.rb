@@ -14,25 +14,26 @@ module Dolphin
 
     def self.create(adapter)
       config = {}
+      database = Dolphin.settings['database']
       case adapter
         when :cassandra
           klass = Dolphin::DataStore::Cassandra
           config.merge!({
             :keyspace => DATABASE,
-            :hosts => Dolphin.settings['database']['hosts'],
-            :port => Dolphin.settings['database']['port'],
-            :max_retry_count => Dolphin.settings['database']['max_retry_count'].to_i,
-            :retry_interval => Dolphin.settings['database']['retry_interval'].to_i
+            :hosts => database['hosts'],
+            :port => database['port'],
+            :max_retry_count => database['max_retry_count'],
+            :retry_interval => database['retry_interval']
           })
         when :mysql
           klass = Dolphin::DataStore::Mysql
           config.merge!({
             :adapter => 'mysql2',
             :database => DATABASE,
-            :host => Dolphin.settings['database']['host'],
-            :port => Dolphin.settings['database']['port'],
-            :user => Dolphin.settings['database']['user'],
-            :password => Dolphin.settings['database']['password'],
+            :host => database['host'],
+            :port => database['port'],
+            :user => database['user'],
+            :password => database['password'],
           })
         when :mock
           klass = Dolphin::DataStore::Mock
