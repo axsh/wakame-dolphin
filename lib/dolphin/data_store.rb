@@ -22,9 +22,13 @@ module Dolphin
             :keyspace => DATABASE,
             :hosts => database['hosts'],
             :port => database['port'],
-            :max_retry_count => database['max_retry_count'],
-            :retry_interval => database['retry_interval']
+            :max_retry_count => Util.to_i(database['max_retry_count']),
+            :retry_interval => Util.to_i(database['retry_interval']),
+            :thrift_retries => Util.to_i(database['thrift_retries']),
+            :thrift_timeout => Util.to_i(database['thrift_timeout']),
+            :thrift_connect_timeout => Util.to_i(database['thrift_connect_timeout']),
           })
+
         when :mysql
           klass = Dolphin::DataStore::Mysql
           config.merge!({

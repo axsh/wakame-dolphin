@@ -32,12 +32,30 @@ module Dolphin
         @max_retry_count = config[:max_retry_count] || 3
         @retry_interval = config[:retry_interval] || 3
         @retry_count = 0
+
+        # thrift_client_options
+        # quoted from: https://github.com/twitter/thrift_client/blob/master/lib/thrift_client.rb
+        # <tt>:retries</tt>:: How many times to retry a request. Defaults to 0.
+        # <tt>:timeout</tt>:: Specify the default timeout in seconds. Defaults to <tt>1</tt>.
+        # <tt>:connect_timeout</tt>:: Specify the connection timeout in seconds. Defaults to <tt>0.1</tt>.
+        @thrift_retries = config[:thrift_retries] || 3
+        @thrift_timeout = config[:thrift_timeout] || 3
+        @thrift_connect_timeout = config[:thrift_connect_timeout] || 1
       end
 
       def connect
         begin
           if @connection.nil?
-            @connection = ::Cassandra.new(@keyspace, seeds)
+
+            cassandra_options = {
+              :thrift_client_options => {
+                :retries => @thrift_retries,
+                :timeout => @thrift_timeout,
+                :connect_timeout => @thrift_connect_timeout
+              }
+            }
+
+            @connection = ::Cassandra.new(@keyspace, seeds, cassandra_options)
 
             # test connecting..
             @connection.ring
