@@ -6,6 +6,12 @@ module Dolphin
   module Util
     include Celluloid::Logger
 
+    class << self
+      def to_i(value)
+        value.nil? ? nil : value.to_i
+      end
+    end
+
     def logger(type, message)
       message = {
         :message => message,
