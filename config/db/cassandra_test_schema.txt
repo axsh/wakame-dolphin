@@ -1,0 +1,15 @@
+create keyspace test_dolphin with
+  placement_strategy = 'org.apache.cassandra.locator.SimpleStrategy' AND
+  strategy_options = {replication_factor:1};
+
+use test_dolphin;
+
+create column family events with comparator = TimeUUIDType
+AND key_validation_class = AsciiType
+AND default_validation_class = UTF8Type;
+
+create column family notifications with comparator = AsciiType
+AND key_validation_class = AsciiType
+AND default_validation_class = UTF8Type;
+
+
