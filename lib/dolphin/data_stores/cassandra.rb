@@ -3,6 +3,7 @@
 require 'cassandra/1.1'
 
 module Thrift
+  #work around for encoding issue with thrift or cassandra-rb.
   class FramedTransport < BaseTransport
     def write(buf,sz=nil)
       if !['US-ASCII', 'ASCII-8BIT'].include?(buf.encoding.to_s)
