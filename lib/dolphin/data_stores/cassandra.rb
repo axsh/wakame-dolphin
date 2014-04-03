@@ -44,13 +44,14 @@ module Dolphin
             return @connection
           end
         rescue ThriftClient::NoServersAvailable => e
-          logger :error, e
           @connection = nil
           if @retry_count < @max_retry_count
             @retry_count += 1
             logger :info, "retry connection... (retry current #{@retry_count} < #{@max_retry_count})"
             sleep @retry_interval
             retry
+          else
+            logger :error, "Reached max retry count. (retried #{@max_retry_count} times): #{e.message}"
           end
         rescue UnAvailableNodeException => e
           logger :error, e
