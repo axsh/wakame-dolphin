@@ -48,7 +48,7 @@ module Dolphin
           @connection = nil
           if @retry_count < @max_retry_count
             @retry_count += 1
-            logger :error, "retry connection..#{@retry_count}"
+            logger :error, "retry connection... (retry current #{@retry_count} < #{@max_retry_count})"
             sleep @retry_interval
             retry
           end
