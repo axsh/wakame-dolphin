@@ -18,6 +18,8 @@ headers = {
 }
 
 messages = {
+  'monitoring_id' => 'nwm-eawc53gf',
+  'alarm_id' => 'alm-ycdg2umw',
   'instance_id' => 'i-abcdefgh',
   'instance_name' => 'test',
   'instance_ip' => '127.0.0.1',
