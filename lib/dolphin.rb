@@ -139,6 +139,10 @@ module Dolphin
     end
   end
 
+  module Plugins
+    autoload :DolphinPlugin, 'dolphin/plugins/dolphin_plugin'
+  end
+
   module DataStore
     autoload :Cassandra, 'dolphin/data_stores/cassandra'
     autoload :Mysql, 'dolphin/data_stores/mysql'
